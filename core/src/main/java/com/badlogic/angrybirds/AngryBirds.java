@@ -1,59 +1,55 @@
 package com.badlogic.angrybirds;
 
 import com.badlogic.gdx.ApplicationAdapter;
-import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.Value;
+import com.badlogic.gdx.scenes.scene2d.ui.Button;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.utils.Align;
+import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
 public class AngryBirds extends ApplicationAdapter {
-    ShapeRenderer tankRenderer, groundRenderer;
-    private OrthographicCamera camera;
-    private Ground ground;
-    private Bird tank1, tank2;
-    private SpriteBatch batch;
-    private Texture bgTexture;
-    private Texture vsTexture;
+    private Stage stage;
+    private Button menuButton;
+    private Skin skin;
+    private Table table;
     @Override
     public void create () {
-        tankRenderer = new ShapeRenderer();
-        groundRenderer = new ShapeRenderer();
-        batch = new SpriteBatch();
-        bgTexture = new Texture("background.png");
-        vsTexture = new Texture("vs.png");
-        camera = new OrthographicCamera();
-        camera.setToOrtho(false,1280,720);
-        ground = new Ground(1280);
-        tank1 = new Bird(100, 20, 16, 20);
-        tank2 = new Bird(900, 20, 16, 20);
+        stage = new Stage(new ScreenViewport());
+        skin = new Skin(Gdx.files.internal("orangepeelui/uiskin.json"));
+        Gdx.input.setInputProcessor(stage);
+        table = new Table();
+        table.setFillParent(true);
+        stage.addActor(table);
+        menuButton = new Button(skin);
+        table.add(menuButton).align(Align.top | Align.left).pad(10).expand();
+        Button healthBar1 = new Button(skin);
+        table.add(healthBar1).align(Align.top|Align.right).pad(10).expand().width(Value.percentWidth(8f, menuButton));
+
+        Button vs = new Button(skin);
+        table.add(vs).align(Align.top).pad(10).expandY().width(Value.percentWidth(1f, menuButton));
+        Button healthBar2 = new Button(skin);
+        table.add(healthBar2).align(Align.top | Align.left).pad(10).expand().width(Value.percentWidth(8f, menuButton));
+        table.add().expand().pad(35);
     }
     @Override
     public void render () {
-        ScreenUtils.clear(1, 0, 0, 1);
-        camera.update();
-        batch.setProjectionMatrix(camera.combined);
-        batch.begin();
-        batch.draw(bgTexture, 0, 0);
-        batch.draw(vsTexture, 640 - 50, 720 - 100);
-        batch.end();
-        tankRenderer.setProjectionMatrix(camera.combined);
-        groundRenderer.setProjectionMatrix(camera.combined);
-        tankRenderer.setColor(0,0,1,1);
-        groundRenderer.setColor(0,1,0,1);
-        tankRenderer.begin(ShapeRenderer.ShapeType.Filled);
-        tank1.draw(tankRenderer);
-        tank2.draw(tankRenderer);
-        tankRenderer.end();
+        Gdx.gl.glClearColor(0.9f, 0.9f, 0.9f, 1);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        stage.act();
+        stage.draw();
+    }
 
-        groundRenderer.begin(ShapeRenderer.ShapeType.Filled);
-        ground.draw(groundRenderer);
-        groundRenderer.end();
+    @Override
+    public void resize (int width, int height) {
+        stage.getViewport().update(width, height, true);
     }
 
     @Override
     public void dispose () {
-        tankRenderer.dispose();
-        groundRenderer.dispose();
+        skin.dispose();
+        stage.dispose();
     }
 }
