@@ -4,13 +4,13 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 
-public class Button {
+public class But {
     private Texture texture;
     private Texture hoverTexture;
     private Rectangle bounds;
     private boolean isHovered;
 
-    public Button(String texturePath, float x, float y, float width, float height) {
+    public But(String texturePath, float x, float y, float width, float height) {
         texture = new Texture(texturePath);
         String hoverTexturePath = null;
         hoverTexture = new Texture(hoverTexturePath);
