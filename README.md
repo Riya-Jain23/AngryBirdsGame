@@ -1,21 +1,31 @@
 # AngryBirdsGame
 A simple LibGDX Java based implementation of the popular Angry Birds game. 
 Made by 
+
 Shubhi Jain (2023517)
+
 and 
+
 Riya Jain (2023441)
+
 
 ## Implementation
 ### Game Structure
 AngryBirds class which extends Game, manages main game components and transition between screens.
 ### Components
 Bird Class
+
 Ground Class
+
 Obstacle class
+
 Pig Class
+
 Slingshot Class
+
 ### Game logic
 The create method in AngryBirds initializes the game components, including the ground, birds, and background music.
+
 The render method updates the game state and redraws all components on each frame.
 ### Menus
 The main menu allows the player to start the game or access settings. This is managed through screens.
@@ -49,9 +59,13 @@ Composition: The AngryBirds class contains instances of Bird, Ground, and other 
 
 ## References
 libGDX documentation
+
 previous year projects
+
 Java documentation
+
 Canva, Figma, https://www.spriters-resource.com, etc for sprites and assets
+
 Course Slides
 
 
