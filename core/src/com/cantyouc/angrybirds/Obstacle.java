@@ -11,7 +11,7 @@ public class Obstacle {
     public Obstacle(float x, float y, String path) {
         this.x = x;
         this.y = y;
-        this.texture = new Texture(path); // Replace with your obstacle texture
+        this.texture = new Texture(path);
         this.width = texture.getWidth();
         this.height = texture.getHeight();
     }
@@ -37,6 +37,6 @@ public class Obstacle {
     }
 
     public void dispose() {
-        texture.dispose(); // Clean up texture
+        texture.dispose();
     }
 }
