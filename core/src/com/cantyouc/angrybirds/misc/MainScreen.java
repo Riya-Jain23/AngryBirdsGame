@@ -21,7 +21,9 @@ import com.cantyouc.angrybirds.Obstacle;
 import com.cantyouc.angrybirds.Slingshot;
 import com.cantyouc.angrybirds.bird.Bird;
 import com.cantyouc.angrybirds.exception.BirdOutOfScreenException;
+import com.cantyouc.angrybirds.menu.FailMenu;
 import com.cantyouc.angrybirds.menu.PauseMenu;
+import com.cantyouc.angrybirds.menu.VictoryMenu;
 
 public class MainScreen implements Screen {
     private int width, height;
@@ -38,6 +40,9 @@ public class MainScreen implements Screen {
     private Obstacle[] obstacles; // Array for obstacles
     private Alien[] aliens; // Array for aliens
     private Ground ground;
+    private boolean playerHasWon;
+    private boolean playerHasLost;
+
     public MainScreen(final AngryBirds game) {
         width = Gdx.graphics.getWidth();
         height = Gdx.graphics.getHeight();
@@ -126,6 +131,36 @@ public class MainScreen implements Screen {
         });
 
         root.add(touchpad).expandX().colspan(4);
+        createButtons();
+    }
+
+    private void createButtons() {
+        Button victoryButton = new Button(skin);
+        victoryButton.add(new Label("Show Victory", skin));
+        victoryButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                game.setScreen(new VictoryMenu(game)); // Show victory menu
+            }
+        });
+
+        Button failButton = new Button(skin);
+        failButton.add(new Label("Show Fail", skin));
+        failButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                game.setScreen(new FailMenu(game)); // Show fail menu
+            }
+        });
+
+        Table buttonTable = new Table();
+        buttonTable.setFillParent(true);
+        buttonTable.top().right(); // Aligns the table to the top-right corner
+        buttonTable.add(victoryButton).pad(10).width(200).height(50).align(Align.bottomLeft);
+        buttonTable.row();
+        buttonTable.add(failButton).pad(10).width(200).height(50).align(Align.bottomLeft);
+
+        stage.addActor(buttonTable);
     }
 
     @Override
