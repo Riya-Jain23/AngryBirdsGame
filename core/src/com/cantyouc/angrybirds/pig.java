@@ -3,16 +3,16 @@ package com.cantyouc.angrybirds;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
-public class Alien {
+public class pig {
     private Texture texture;
     private float x, y;
     private float width, height;
 
 
-    public Alien(float x, float y, float scale) {
+    public pig(float x, float y, float scale) {
         this.x = x;
         this.y = y;
-        this.texture = new Texture("pig1.png"); // Replace with your alien texture
+        this.texture = new Texture("pig1.png");
         this.width = texture.getWidth() * scale;
         this.height = texture.getHeight() * scale;
     }

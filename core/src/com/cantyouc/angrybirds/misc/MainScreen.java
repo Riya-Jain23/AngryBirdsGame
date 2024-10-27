@@ -11,12 +11,11 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import com.cantyouc.angrybirds.Alien;
+import com.cantyouc.angrybirds.pig;
 import com.cantyouc.angrybirds.Obstacle;
 import com.cantyouc.angrybirds.Slingshot;
 import com.cantyouc.angrybirds.bird.Bird;
@@ -38,7 +37,7 @@ public class MainScreen implements Screen {
     private Slingshot slingshot;
     private Bird[] birds;
     private Obstacle[] obstacles;
-    private Alien[] aliens;
+    private pig[] pigs;
     private Ground ground;
     private boolean playerHasWon;
     private boolean playerHasLost;
@@ -63,8 +62,8 @@ public class MainScreen implements Screen {
 
         ground = game.getGround();
         birds = new Bird[3];
-        int birdWidth = 100;
-        int birdHeight = 100;
+        int birdWidth = 70;
+        int birdHeight = 70;
         for (int i = 0; i < 3; i++) {
             int birdXPosition = 100*i;
             int birdYPosition = (int)(height / 2 + i * 50);
@@ -73,11 +72,15 @@ public class MainScreen implements Screen {
         }
 
         obstacles = new Obstacle[]{
-                new Obstacle(1500, height / 2-400),
-                new Obstacle(1500, height / 2 -320)
+                new Obstacle(1500, height / 2 - 400, "obstacle1.png"),
+                new Obstacle(1500, height / 2 - 320, "obstacle1.png"),
+                new Obstacle(1500, height / 2 - 240, "obstacle1.png"),
+                new Obstacle(1650, height / 2 - 400, "obstacle1.png"),
+                new Obstacle(1650, height / 2 - 320, "obstacle1.png")
         };
-        aliens = new Alien[]{
-                new Alien(1450, height / 2 - 240,0.5f)
+        pigs = new pig[]{
+                new pig(1490, height / 2 - 160,0.3f),
+                new pig(1640, height / 2 - 240,0.3f)
         };
 
         Table root = new Table();
@@ -191,8 +194,8 @@ public class MainScreen implements Screen {
             obstacle.draw(game.batch);
         }
 
-        for (Alien alien : aliens) {
-            alien.draw(game.batch);
+        for (pig pig : pigs) {
+            pig.draw(game.batch);
         }
         game.batch.end();
 
@@ -236,8 +239,8 @@ public class MainScreen implements Screen {
         for (Obstacle obstacle : obstacles) {
             obstacle.dispose();
         }
-        for (Alien alien : aliens) {
-            alien.dispose();
+        for (pig pig : pigs) {
+            pig.dispose();
         }
         for (Bird bird : birds) {
             if (bird.getImage() != null && bird.getImage().getTexture() != null) {

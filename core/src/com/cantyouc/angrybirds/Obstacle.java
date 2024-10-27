@@ -8,10 +8,10 @@ public class Obstacle {
     private float x, y;
     private float width, height;
 
-    public Obstacle(float x, float y) {
+    public Obstacle(float x, float y, String path) {
         this.x = x;
         this.y = y;
-        this.texture = new Texture("obstacle1.png"); // Replace with your obstacle texture
+        this.texture = new Texture(path); // Replace with your obstacle texture
         this.width = texture.getWidth();
         this.height = texture.getHeight();
     }
