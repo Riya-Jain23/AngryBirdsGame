@@ -17,7 +17,7 @@ public class Shot implements AttackType {
     }
 
     public void move() {
-        // move bullet
+
     }
 
     public boolean isSpecial() {
@@ -25,11 +25,10 @@ public class Shot implements AttackType {
     }
 
     public void attack(Bird bird) {
-        // attack bird
-        // calculate distance from bird and pass to dealDamageTo()
+
     }
 
     public void dealDamageTo(Bird bird, int distanceFromBird) {
-        // deal damage to bird
+
     }
 }

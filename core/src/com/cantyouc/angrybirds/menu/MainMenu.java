@@ -14,9 +14,7 @@ import com.cantyouc.angrybirds.misc.AngryBirds;
 public class MainMenu extends Menu {
     public MainMenu(final AngryBirds game) {
         super(game);
-//        Table table = new Table();
 
-        // Adding image to fill the background
         Texture backgroundTexture = new Texture(Gdx.files.internal("homescreen.png"));
         TextureRegion backgroundTextureRegion = new TextureRegion(backgroundTexture);
         TextureRegionDrawable backgroundTextureRegionDrawable = new TextureRegionDrawable(backgroundTextureRegion);

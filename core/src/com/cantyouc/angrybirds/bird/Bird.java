@@ -36,7 +36,7 @@ public class Bird {
         this.image.flip(this.flipped, false);
     }
     public TextureRegion getImage() {
-        return image; // Return the current image
+        return image;
     }
 
     public void draw(SpriteBatch batch) {

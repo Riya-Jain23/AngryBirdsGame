@@ -31,22 +31,18 @@ public class FailMenu implements Screen {
         this.backButtonImage = new Texture("back_to_main_menu.png"); // Image for "Back to Main Menu" button
         this.restartButtonImage = new Texture("restart_level.png"); // Image for "Restart Level" button
 
-        // Define button sizes (adjust these as needed)
         float buttonWidth = 200f;
         float buttonHeight = 200f;
 
-        // Create buttons with image textures
         Button backButton = new Button(new TextureRegionDrawable(backButtonImage));
         Button restartButton = new Button(new TextureRegionDrawable(restartButtonImage));
 
-        // Set button dimensions
         backButton.setSize(buttonWidth, buttonHeight);
         restartButton.setSize(buttonWidth, buttonHeight);
 
-        // Add listeners for button actions
         backButton.addListener(event -> {
             if (event.isHandled()) {
-                game.setScreen(new MainMenu(game)); // Go to TitleScreen
+                game.setScreen(new MainMenu(game));
                 dispose();
             }
             return false;
@@ -54,25 +50,20 @@ public class FailMenu implements Screen {
 
         restartButton.addListener(event -> {
             if (event.isHandled()) {
-                game.setScreen(new MainScreen(game)); // Restart the level
+                game.setScreen(new MainScreen(game));
                 dispose();
             }
             return false;
         });
 
-        // Create and set up a table for horizontal button alignment
         Table buttonTable = new Table();
         buttonTable.setFillParent(true);
-        buttonTable.bottom().padBottom(50); // Adjust padding from bottom as needed
+        buttonTable.bottom().padBottom(50);
 
-        // Add buttons to the table with spacing and alignment
-        buttonTable.add(backButton).size(buttonWidth, buttonHeight).padRight(20); // Add padding between buttons
+        buttonTable.add(backButton).size(buttonWidth, buttonHeight).padRight(20);
         buttonTable.add(restartButton).size(buttonWidth, buttonHeight);
 
-        // Add the table to the stage
         stage.addActor(buttonTable);
-
-        // Set the input processor to the stage
         Gdx.input.setInputProcessor(stage);
     }
 

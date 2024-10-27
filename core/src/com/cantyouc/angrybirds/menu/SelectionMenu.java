@@ -20,20 +20,17 @@ public class SelectionMenu extends Menu {
     public SelectionMenu(final AngryBirds game) {
         super(game);
 
-        // Load the choose level texture
         chooseLevelTexture = new Texture(Gdx.files.internal("chooselevel.png"));
         Image chooseLevelImage = new Image(chooseLevelTexture);
 
-        // Create buttons for each level
         Button level1Button = new Button(new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("level1.png")))));
         Button level2Button = new Button(new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("level2.png")))));
         Button level3Button = new Button(new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("level3.png")))));
 
-        // Set up listeners for the buttons
         level1Button.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                // Handle level 1 selection
+
                 game.setScreen(new MainScreen(game)); // replace
             }
         });
@@ -73,7 +70,6 @@ public class SelectionMenu extends Menu {
         game.batch.begin();
         game.batch.draw(new Texture(Gdx.files.internal("background.jpg")), 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         game.batch.end();
-
         stage.act(d);
         stage.draw();
     }

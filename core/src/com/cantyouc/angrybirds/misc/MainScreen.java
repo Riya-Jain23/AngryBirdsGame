@@ -35,10 +35,10 @@ public class MainScreen implements Screen {
     private final ShapeRenderer renderer;
     public final AngryBirds game;
     public int numAirDrops;
-    private Slingshot slingshot; // Add slingshot
-    private Bird[] birds; // Array for three birds
-    private Obstacle[] obstacles; // Array for obstacles
-    private Alien[] aliens; // Array for aliens
+    private Slingshot slingshot;
+    private Bird[] birds;
+    private Obstacle[] obstacles;
+    private Alien[] aliens;
     private Ground ground;
     private boolean playerHasWon;
     private boolean playerHasLost;
@@ -60,15 +60,14 @@ public class MainScreen implements Screen {
         Gdx.input.setInputProcessor(stage);
 
         slingshot = new Slingshot(300, height / 2-400, 80, 160);
-//        ground = new Ground(width); // Create ground with screen width
 
         ground = game.getGround();
         birds = new Bird[3];
-        int birdWidth = 100; // Example width for the bird
-        int birdHeight = 100; // Example height for the bird
+        int birdWidth = 100;
+        int birdHeight = 100;
         for (int i = 0; i < 3; i++) {
-            int birdXPosition = 100*i; // Set a new x position
-            int birdYPosition = (int)(height / 2 + i * 50); // Set a new y position
+            int birdXPosition = 100*i;
+            int birdYPosition = (int)(height / 2 + i * 50);
             birds[i] = new Bird(birdXPosition, birdYPosition, birdHeight, birdWidth, ground, false);
             birds[i].setImage(new TextureRegion(new Texture(Gdx.files.internal("bird" + (i + 1) + ".png"))));
         }
@@ -102,7 +101,8 @@ public class MainScreen implements Screen {
                 game.setScreen(new PauseMenu(game));
                 dispose();
             }
-        });
+        }
+        );
 
         table.add(pauseButton).align(Align.top | Align.left).padTop(10).expandX().width(buttonWidth).height(buttonHeight).padLeft(10);
 
@@ -155,7 +155,7 @@ public class MainScreen implements Screen {
 
         Table buttonTable = new Table();
         buttonTable.setFillParent(true);
-        buttonTable.top().right(); // Aligns the table to the top-right corner
+        buttonTable.top().right();
         buttonTable.add(victoryButton).pad(10).width(200).height(50).align(Align.bottomLeft);
         buttonTable.row();
         buttonTable.add(failButton).pad(10).width(200).height(50).align(Align.bottomLeft);
@@ -175,24 +175,9 @@ public class MainScreen implements Screen {
         game.batch.begin();
         game.batch.draw(background, 0, 0, width, height);
 
-//        try {
-//            game.getBird1().draw(game.batch);
-//            game.getBird1().move();
-//        }
-//        catch (BirdOutOfScreenException ex) {
-//            game.getBird1().setXVelocity(0);
-//        }
-//
-//        try {
-//            game.getBird2().draw(game.batch);
-//            game.getBird2().move();
-//        }
-//        catch (BirdOutOfScreenException ex) {
-//            game.getBird2().setXVelocity(0);
-//        }
         slingshot.draw(game.batch);
 
-        // Draw birds
+
         for (int i = 0; i < birds.length; i++) {
             try {
                 birds[i].draw(game.batch);
@@ -202,12 +187,10 @@ public class MainScreen implements Screen {
             }
         }
 
-        // Draw obstacles
         for (Obstacle obstacle : obstacles) {
             obstacle.draw(game.batch);
         }
 
-        // Draw aliens
         for (Alien alien : aliens) {
             alien.draw(game.batch);
         }

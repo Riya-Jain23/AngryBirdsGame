@@ -7,12 +7,11 @@ public class Alien {
     private Texture texture;
     private float x, y;
     private float width, height;
-//    private float scale;
+
 
     public Alien(float x, float y, float scale) {
         this.x = x;
         this.y = y;
-//        this.scale = 0.1F;
         this.texture = new Texture("pig1.png"); // Replace with your alien texture
         this.width = texture.getWidth() * scale;
         this.height = texture.getHeight() * scale;

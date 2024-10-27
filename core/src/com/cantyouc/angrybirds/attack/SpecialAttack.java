@@ -17,8 +17,7 @@ public class SpecialAttack implements AttackType {
     }
 
     public void move() {
-        // move the attack if needed
-        // this will not be required if the special attack directly blasts at the opposing bird's position
+
     }
 
     public boolean isSpecial() {
@@ -26,11 +25,10 @@ public class SpecialAttack implements AttackType {
     }
 
     public void attack(Bird bird) {
-        // attack bird
-        // calculate distance from bird and pass to dealDamageTo()
+
     }
 
     public void dealDamageTo(Bird bird, int distanceFromBird) {
-        // deal damage to bird based on distance or otherwise
+
     }
 }

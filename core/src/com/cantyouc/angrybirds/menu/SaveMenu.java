@@ -15,6 +15,7 @@ import com.cantyouc.angrybirds.misc.AngryBirds;
 
 public class SaveMenu extends Menu {
     public SaveMenu(final AngryBirds game) {
+
         super(game);
         Table table = new Table();
         table.add(new Image(new Texture(Gdx.files.internal("saveGame.png")))).align(Align.center);

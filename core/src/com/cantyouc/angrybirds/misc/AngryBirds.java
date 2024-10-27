@@ -20,7 +20,7 @@ public class AngryBirds extends Game {
 		bird1 = new Bird(100, 100, 59, 100, ground, false);
 		bird2 = new Bird(1000, 2000, 59, 100, ground, true);
 		this.setScreen(new MainMenu(this));
-        // Initialize and configure background music
+
         backgroundMusic = Gdx.audio.newMusic(Gdx.files.internal("bgmusic.mp3"));
         backgroundMusic.setLooping(true);
         backgroundMusic.setVolume(0.5f);
