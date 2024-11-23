@@ -30,7 +30,6 @@ public class Bird {
         this.flipped = flipped;
         hitbox = new Rectangle(x, y, width, height);
     }
-
     public void setImage(TextureRegion image) {
         this.image = image;
         this.image.flip(this.flipped, false);
@@ -80,4 +79,20 @@ public class Bird {
         return attackAngle;
     }
 
+    public void setPosition(float v, float v1) {
+        this.x = Math.round(v);
+        this.y = Math.round(v1);
+    }
+
+    public void setYVelocity(float v) {
+        this.yVelocity = Math.round(v);
+    }
+
+    public int getXVelocity() {
+        return xVelocity;
+    }
+
+    public int getYVelocity() {
+        return yVelocity;
+    }
 }

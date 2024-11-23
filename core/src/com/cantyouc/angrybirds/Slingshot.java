@@ -38,4 +38,12 @@ public class Slingshot {
     public void draw(SpriteBatch batch) {
         batch.draw(texture, x, y, width, height);
     }
+
+    public float getX() {
+        return x;
+    }
+
+    public float getY() {
+        return y;
+    }
 }

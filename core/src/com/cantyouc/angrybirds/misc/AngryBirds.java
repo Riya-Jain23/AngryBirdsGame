@@ -27,7 +27,7 @@ public class AngryBirds extends Game {
         backgroundMusic.play();
 	}
 
-	public Bird getBird1() {
+    public Bird getBird1() {
 		return bird1;
 	}
 
