@@ -359,7 +359,7 @@ public class MainScreen implements Screen, Serializable {
 //    }
 
     @Override
-    public void render(float d) {
+    public void render(float deltaTime) {
         Gdx.gl.glClearColor(0.9f, 0.9f, 0.9f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         camera.update();
@@ -371,11 +371,12 @@ public class MainScreen implements Screen, Serializable {
 
         slingshot.draw(game.batch);
 
+        // Move and draw birds
         for (Bird bird : birds) {
             try {
                 bird.draw(game.batch);
                 if (bird == currentBird && birdLaunched) {
-                    bird.move(d);
+                    bird.move(deltaTime);
                     if (Math.abs(bird.getXVelocity()) < 0.1 && Math.abs(bird.getYVelocity()) < 0.1) {
                         currentBirdIndex++;
                         setupNextBird();
@@ -387,9 +388,25 @@ public class MainScreen implements Screen, Serializable {
                 currentBirdIndex++;
                 setupNextBird();
             }
+
+            // Check for collisions with obstacles
+            for (Obstacle obstacle : obstacles) {
+                if (checkCollision(bird, obstacle)) {
+                    // Push the obstacle based on bird's velocity
+                    float pushX = bird.getXVelocity() * 0.5f; // Adjust the factor to control the push strength
+                    float pushY = bird.getYVelocity() * 0.5f;
+                    obstacle.push(pushX, pushY);
+
+                    // Optionally, stop the bird after hitting an obstacle
+                    bird.setXVelocity(0);
+                    bird.setYVelocity(0);
+                }
+            }
         }
 
+        // Draw obstacles
         for (Obstacle obstacle : obstacles) {
+            obstacle.update(deltaTime); // Update obstacle's position
             obstacle.draw(game.batch);
         }
 
@@ -426,6 +443,16 @@ public class MainScreen implements Screen, Serializable {
         stage.act();
         stage.draw();
     }
+
+    // Collision detection method
+    private boolean checkCollision(Bird bird, Obstacle obstacle) {
+        // Simple axis-aligned bounding box (AABB) collision detection
+        return bird.getX() < obstacle.getX() + obstacle.getWidth() &&
+            bird.getX() + bird.getWidth() > obstacle.getX() &&
+            bird.getY() < obstacle.getY() + obstacle.getHeight() &&
+            bird.getY() + bird.getHeight() > obstacle.getY();
+    }
+
 
 
 

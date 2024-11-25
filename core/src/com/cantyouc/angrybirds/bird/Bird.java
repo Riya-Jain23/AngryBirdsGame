@@ -42,6 +42,13 @@ public class Bird {
         batch.draw(image, x, y, width / 2f, height / 2f, width, height, 1, 1, getAngle());
     }
 
+    public int getHeight() {
+        return height;
+    }
+
+    public int getWidth() {
+        return width;
+    }
 
     public int getX() {
         return x;
