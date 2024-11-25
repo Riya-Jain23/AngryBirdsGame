@@ -377,6 +377,17 @@ public class MainScreen implements Screen, Serializable {
                 bird.draw(game.batch);
                 if (bird == currentBird && birdLaunched) {
                     bird.move(deltaTime);
+
+                    // Check for collisions with obstacles
+                    for (Obstacle obstacle : obstacles) {
+                        if (obstacle.isHitByBird(bird)) {
+                            // Apply a velocity to the obstacle when it is hit by the bird
+                            float pushX = (bird.getXVelocity() * 3f); // Adjust force multiplier for more impact
+                            float pushY = (bird.getYVelocity() * 3f); // Adjust force multiplier for more impact
+                            obstacle.push(pushX, pushY);
+                        }
+                    }
+
                     if (Math.abs(bird.getXVelocity()) < 0.1 && Math.abs(bird.getYVelocity()) < 0.1) {
                         currentBirdIndex++;
                         setupNextBird();
@@ -387,20 +398,6 @@ public class MainScreen implements Screen, Serializable {
                 bird.setYVelocity(0);
                 currentBirdIndex++;
                 setupNextBird();
-            }
-
-            // Check for collisions with obstacles
-            for (Obstacle obstacle : obstacles) {
-                if (checkCollision(bird, obstacle)) {
-                    // Push the obstacle based on bird's velocity
-                    float pushX = bird.getXVelocity() * 0.5f; // Adjust the factor to control the push strength
-                    float pushY = bird.getYVelocity() * 0.5f;
-                    obstacle.push(pushX, pushY);
-
-                    // Optionally, stop the bird after hitting an obstacle
-                    bird.setXVelocity(0);
-                    bird.setYVelocity(0);
-                }
             }
         }
 

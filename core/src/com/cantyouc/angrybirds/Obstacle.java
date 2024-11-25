@@ -2,6 +2,7 @@ package com.cantyouc.angrybirds;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.cantyouc.angrybirds.bird.Bird;
 
 public class Obstacle {
     private Texture texture;  // This resolves the issue with the texture symbol
@@ -19,11 +20,14 @@ public class Obstacle {
         this.yVelocity = 0;
     }
 
-    // Update position based on velocity
     public void update(float deltaTime) {
+        // Apply gravity only if the obstacle is not moving due to a collision
+
+        // Update position based on velocity
         this.x += xVelocity * deltaTime;
         this.y += yVelocity * deltaTime;
     }
+
 
     public void draw(SpriteBatch batch) {
         batch.draw(texture, x, y);
@@ -40,6 +44,18 @@ public class Obstacle {
     public float getY() { return y; }
     public float getWidth() { return width; }
     public float getHeight() { return height; }
+
+    // Check if the obstacle is hit by the bird
+    public boolean isHitByBird(Bird bird) {
+        float birdX = bird.getX();
+        float birdY = bird.getY();
+        float birdWidth = bird.getWidth();
+        float birdHeight = bird.getHeight();
+
+        // Check if the bird's bounding box intersects with the obstacle
+        return (birdX < this.x + this.width && birdX + birdWidth > this.x &&
+            birdY < this.y + this.height && birdY + birdHeight > this.y);
+    }
 
     // Dispose texture when done
     public void dispose() {
