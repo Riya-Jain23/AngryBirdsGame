@@ -382,9 +382,10 @@ public class MainScreen implements Screen, Serializable {
                     for (Obstacle obstacle : obstacles) {
                         if (obstacle.isHitByBird(bird)) {
                             // Apply a velocity to the obstacle when it is hit by the bird
-                            float pushX = (bird.getXVelocity() * 3f); // Adjust force multiplier for more impact
-                            float pushY = (bird.getYVelocity() * 3f); // Adjust force multiplier for more impact
+                            float pushX = (bird.getXVelocity() * 15f); // Adjust force multiplier for more impact
+                            float pushY = (bird.getYVelocity() * 15f); // Adjust force multiplier for more impact
                             obstacle.push(pushX, pushY);
+                            obstacle.crumble();
                         }
                     }
 
