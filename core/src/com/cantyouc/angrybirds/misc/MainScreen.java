@@ -8,8 +8,6 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
@@ -22,10 +20,10 @@ import com.cantyouc.angrybirds.Obstacle;
 import com.cantyouc.angrybirds.Slingshot;
 import com.cantyouc.angrybirds.bird.Bird;
 import com.cantyouc.angrybirds.exception.BirdOutOfScreenException;
-import com.cantyouc.angrybirds.menu.FailMenu;
 import com.cantyouc.angrybirds.menu.PauseMenu;
-import com.cantyouc.angrybirds.menu.VictoryMenu;
+
 import java.io.Serializable;
+import java.util.ArrayList;
 
 public class MainScreen implements Screen, Serializable {
     private int width, height;
@@ -65,11 +63,6 @@ public class MainScreen implements Screen, Serializable {
         stage = new Stage(viewport);
         skin = new Skin(Gdx.files.internal("orangepeelui/uiskin.json"));
 //        Gdx.input.setInputProcessor(stage);
-
-
-
-
-
 
         InputMultiplexer multiplexer = new InputMultiplexer();
         multiplexer.addProcessor(stage);
@@ -124,22 +117,30 @@ public class MainScreen implements Screen, Serializable {
                     Vector2 touch = new Vector2(screenX, screenY);
                     viewport.unproject(touch);
 
-                    // Calculate launch velocity based on drag distance and direction
-                    float deltaX = dragStartX - dragEndX;
-                    float deltaY = dragStartY - dragEndY;
-                    float distance = Vector2.len(deltaX, deltaY);
-                    float velocityX = (deltaX / distance) * launchPower;
-                    float velocityY = (deltaY / distance) * launchPower;
+                    // Calculate velocity based on drag
+                    float vx = (dragStartX - dragEndX) * 0.25f; // Opposite to drag
+                    float vy = (dragStartY - dragEndY) * 0.25f;
 
-                    // Launch the bird
-                    currentBird.setXVelocity((int) (velocityX * 15));
-                    currentBird.setYVelocity(velocityY * 15);
+                    // Set bird's velocity
+                    currentBird.setXVelocity(vx);
+                    currentBird.setYVelocity(vy);
+
+                    // Predict trajectory (e.g., maxTime = 3 seconds, deltaTime = 0.05s)
+                    ArrayList<Object> trajectory = predictTrajectory(
+                        currentBird.getX(), currentBird.getY(),
+                        vx, vy,
+                        0.05f, 3.0f
+                    );
+
                     birdLaunched = true;
                     isDragging = false;
                     return true;
                 }
                 return false;
             }
+
+
+
         });
         Gdx.input.setInputProcessor(multiplexer);
 
@@ -147,7 +148,7 @@ public class MainScreen implements Screen, Serializable {
 
 
 
-        slingshot = new Slingshot(300, height / 2-400, 80, 160);
+        slingshot = new Slingshot(300, height / 2-400, 80, 150);
         ground = game.getGround();
         initializeBirds();
         initializeObstacles();
@@ -241,9 +242,9 @@ public class MainScreen implements Screen, Serializable {
     private void initializeBirds() {
         birds = new Bird[3];
         int birdWidth = 70;
-        int birdHeight = 70;
+        int birdHeight = 80;
         for (int i = 0; i < 3; i++) {
-            int birdXPosition = 100 * i;
+            int birdXPosition = 150 * i;
             int birdYPosition = (int)(height / 2 + i * 50);
             birds[i] = new Bird(birdXPosition, birdYPosition, birdHeight, birdWidth, ground, false);
             birds[i].setImage(new TextureRegion(new Texture(Gdx.files.internal("bird" + (i + 1) + ".png"))));
@@ -364,20 +365,18 @@ public class MainScreen implements Screen, Serializable {
         camera.update();
         viewport.update(width, height);
 
-        // Begin SpriteBatch for background and game elements
         game.batch.setProjectionMatrix(stage.getViewport().getCamera().combined);
         game.batch.begin();
         game.batch.draw(background, 0, 0, width, height);
 
         slingshot.draw(game.batch);
 
-        // Draw birds
         for (Bird bird : birds) {
             try {
                 bird.draw(game.batch);
                 if (bird == currentBird && birdLaunched) {
-                    bird.move();
-                    if (bird.getXVelocity() == 0 || bird.getYVelocity() == 0) {
+                    bird.move(d);
+                    if (Math.abs(bird.getXVelocity()) < 0.1 && Math.abs(bird.getYVelocity()) < 0.1) {
                         currentBirdIndex++;
                         setupNextBird();
                     }
@@ -390,7 +389,6 @@ public class MainScreen implements Screen, Serializable {
             }
         }
 
-        // Draw obstacles and pigs
         for (Obstacle obstacle : obstacles) {
             obstacle.draw(game.batch);
         }
@@ -398,29 +396,72 @@ public class MainScreen implements Screen, Serializable {
         for (pig pig : pigs) {
             pig.draw(game.batch);
         }
+
         game.batch.end();
 
-        // Draw ground
         renderer.setProjectionMatrix(stage.getViewport().getCamera().combined);
         renderer.begin(ShapeRenderer.ShapeType.Filled);
         renderer.setColor(0f, 1f, 0f, 1f);
         ground.draw(renderer);
         renderer.end();
 
-        // Draw drag line if dragging
+        // Draw trajectory prediction (only while dragging and before bird launch)
         if (isDragging && currentBird != null && !birdLaunched) {
             Gdx.gl.glEnable(GL20.GL_BLEND);
             renderer.begin(ShapeRenderer.ShapeType.Line);
-            renderer.setColor(1, 0, 0, 1);
-            renderer.line(dragStartX, dragStartY, dragEndX, dragEndY);
+            renderer.setColor(1, 0, 0, 1); // Red color for trajectory
+
+            // Predict trajectory based on current drag
+            ArrayList<Object> trajectory = predictTrajectory(
+                currentBird.getX(), currentBird.getY(),
+                (dragStartX - dragEndX) * 0.25f,
+                (dragStartY - dragEndY) * 0.25f,
+                0.05f, 3.0f
+            );
+
             renderer.end();
             Gdx.gl.glDisable(GL20.GL_BLEND);
         }
 
-        // Draw UI stage last
         stage.act();
         stage.draw();
     }
+
+
+
+    public ArrayList<Object> predictTrajectory(float initialX, float initialY, float initialXVelocity, float initialYVelocity, float deltaTime, float maxTime) {
+        ArrayList<Object> trajectoryPoints = new ArrayList<>();
+
+        // Initialize the position and velocity
+        float x = initialX;
+        float y = initialY;
+        float xVelocity = initialXVelocity;
+        float yVelocity = initialYVelocity;
+
+        // Simulate the trajectory over time
+        for (float t = 0; t <= maxTime; t += deltaTime) {
+            // Add the current position to the trajectory points
+            trajectoryPoints.add(new Vector2(x, y));
+
+            // Update the position based on velocity and deltaTime
+            x += xVelocity * deltaTime;
+            y += yVelocity * deltaTime;
+
+            // Update the vertical velocity based on gravity
+            yVelocity -= Ground.GRAVITY * deltaTime;
+
+            // If the bird hits the ground (y <= ground height), stop the prediction
+            if (y <= ground.getHeight()) {
+                y = ground.getHeight();
+                break;
+            }
+        }
+
+        return trajectoryPoints;
+    }
+
+
+
 
     @Override
     public void resize(int width, int height) {

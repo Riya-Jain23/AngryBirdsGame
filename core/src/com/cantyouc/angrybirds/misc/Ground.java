@@ -11,6 +11,8 @@ public class Ground {
     private final float height;
     private final int width;
     private final float y;
+    public static final float GRAVITY = 9.8f; // Adjust based on game scale
+
 
     public Ground(int width) {
         this.width = width;

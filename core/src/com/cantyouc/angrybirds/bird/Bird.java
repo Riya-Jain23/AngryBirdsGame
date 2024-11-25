@@ -15,7 +15,7 @@ public class Bird {
     private final int height, width;
     private final Rectangle hitbox;
     private final Ground ground;
-    protected int xVelocity, yVelocity;
+    protected float xVelocity, yVelocity;
     protected AttackType defaultAttack;
     protected TextureRegion image;
     protected int maxAttackPower;
@@ -39,33 +39,61 @@ public class Bird {
     }
 
     public void draw(SpriteBatch batch) {
-        batch.draw(image, x, getY(), width/2f, height/2f, width, height, 1, 1, getAngle());
+        batch.draw(image, x, y, width / 2f, height / 2f, width, height, 1, 1, getAngle());
     }
+
 
     public int getX() {
         return x;
     }
 
     public int getY() {
-        return ((int) ground.getHeight());
+        return y;
     }
 
-    public void move() throws BirdOutOfScreenException {
+    // Launch method to set the initial velocity based on angle and power
+    public void launch(float angle, float power) {
+        float angleRad = (float) Math.toRadians(angle);
+        xVelocity = power * (float) Math.cos(angleRad);
+        yVelocity = power * (float) Math.sin(angleRad);
+    }
+    public void move(float deltaTime) throws BirdOutOfScreenException {
+        // Update position using deltaTime and velocities
         if (x+xVelocity > 1 && x+xVelocity < ground.getWidth()-width-1) {
-            x += xVelocity;
-        } else {
-            throw new BirdOutOfScreenException("Bird is out of screen");
+            x += xVelocity;}
+        x += xVelocity * deltaTime;  // Apply horizontal velocity
+        if (y+yVelocity > 1 && y+yVelocity < ground.getWidth()-width-1) {
+            y += yVelocity;}
+        yVelocity -= Ground.GRAVITY * deltaTime;  // Apply gravity to vertical velocity
+        y += yVelocity * deltaTime;  // Apply vertical velocity
+
+        // Ground collision check (the bird should stop when it hits the ground)
+        if (y <= ground.getHeight()) {
+            y = (int) ground.getHeight();  // Snap to ground level
+            yVelocity = 0;  // Stop vertical motion
+            xVelocity = 0;  // Stop horizontal motion
         }
-        x += xVelocity;
+
+        // Check if the bird is out of bounds
+        if (x < 0 || x > ground.getWidth() || y > ground.getHeight() + 600) {
+            throw new BirdOutOfScreenException("Bird is out of screen bounds.");
+        }
+
+        // Update hitbox position (to maintain accurate collision detection)
+        hitbox.setPosition(x, y);
     }
 
-    public void setXVelocity(int xVelocity) {
+
+
+
+    public void setXVelocity(float xVelocity) {
         this.xVelocity = xVelocity;
     }
 
     public float getAngle() {
-        return ((float) Math.atan((ground.getHeight() - ground.getHeight())/width) * 180 / (float) Math.PI);
+        return (float) Math.toDegrees(Math.atan2(yVelocity, xVelocity));
     }
+
 
     public Rectangle getHitbox() {
         return hitbox;
@@ -84,15 +112,15 @@ public class Bird {
         this.y = Math.round(v1);
     }
 
-    public void setYVelocity(float v) {
-        this.yVelocity = Math.round(v);
+    public void setYVelocity(float yVelocity) {
+        this.yVelocity = yVelocity;
     }
 
-    public int getXVelocity() {
+    public float getXVelocity() {
         return xVelocity;
     }
 
-    public int getYVelocity() {
+    public float getYVelocity() {
         return yVelocity;
     }
 }
