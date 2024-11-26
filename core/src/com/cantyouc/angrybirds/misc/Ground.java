@@ -20,7 +20,7 @@ public class Ground {
     }
 
     public void draw(ShapeRenderer shapeRenderer) {
-        shapeRenderer.setColor(0f, 0f, 0f, 0f);
+        shapeRenderer.setColor(0f, 0.5f, 0f, 1f);
         shapeRenderer.rect(0, y, width, height);
     }
 

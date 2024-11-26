@@ -2,6 +2,7 @@ package com.cantyouc.angrybirds;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.cantyouc.angrybirds.bird.Bird;
 
@@ -13,6 +14,7 @@ public class Obstacle {
     private float width, height;
     private float xVelocity, yVelocity; // For pushing the obstacle
     private ArrayList<Piece> pieces;
+    private boolean isCrumbling = false;
 
     public Obstacle(float x, float y, String path) {
         this.x = x;
@@ -79,6 +81,7 @@ public class Obstacle {
     // Method to split the obstacle into random parts
     public void crumble() {
         pieces.clear(); // Clear any previous pieces
+        isCrumbling = true;
 
         // Define number of pieces to break the obstacle into
         int numPieces = 20; // Number of pieces (can adjust as needed)
@@ -93,11 +96,24 @@ public class Obstacle {
             // Ensure that the piece is within the bounds of the obstacle texture
             if (randomX + randomWidth > width) randomWidth = width - randomX;
             if (randomY + randomHeight > height) randomHeight = height - randomY;
+            TextureRegion region = new TextureRegion(texture, (int) randomX, (int) randomY, (int) randomWidth, (int) randomHeight);
 
             // Create a piece and add it to the list
-            Piece piece = new Piece(texture, x + randomX, y + randomY, randomWidth, randomHeight,
+            Piece piece = new Piece(region, x + randomX, y + randomY, randomWidth, randomHeight,
                 MathUtils.random(-50, 50), MathUtils.random(-50, 50));
             pieces.add(piece);
+        }
+    }
+
+    public void checkPigContact(pig[] pigs) {
+        if (isCrumbling) {
+            // Check for pigs in contact with the crumbling obstacle
+            for (pig pig : pigs) {
+                if (pig != null && !pig.isDead() && pig.isInContactWithObstacle(this)) {
+                    // If a pig is in contact with the crumbling obstacle, apply gravity or force
+                    pig.applyForce(-50);  // Apply a downward force to simulate falling
+                }
+            }
         }
     }
 
@@ -107,12 +123,12 @@ public class Obstacle {
     }
 
     private class Piece {
-        private Texture pieceTexture;
+        private TextureRegion pieceTexture;
         private float x, y, width, height;
         private float xVelocity, yVelocity;
 
-        public Piece(Texture texture, float x, float y, float width, float height, float xVelocity, float yVelocity) {
-            this.pieceTexture = new Texture("obstacle1.png"); // Create a piece from the texture
+        public Piece(TextureRegion texture, float x, float y, float width, float height, float xVelocity, float yVelocity) {
+            this.pieceTexture = texture; // Create a piece from the texture
             this.x = x;
             this.y = y;
             this.width = width;

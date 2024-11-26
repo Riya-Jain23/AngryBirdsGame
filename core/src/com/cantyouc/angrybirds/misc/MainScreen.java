@@ -48,6 +48,9 @@ public class MainScreen implements Screen, Serializable {
     private boolean allTargetsCleared = false;
     private float launchPower = 1.0f;
     private static final float MAX_DRAG_DISTANCE = 100f;
+    private float levelCompletionDelay = 0f; // Track time until level completion delay
+    private boolean levelCompleted = false; // Flag to prevent multiple transitions
+
 
     public MainScreen(final AngryBirds game) {
         width = Gdx.graphics.getWidth();
@@ -339,8 +342,8 @@ public class MainScreen implements Screen, Serializable {
     }
     private void initializePigs() {
         pigs = new pig[]{
-            new pig(1490, height / 2 - 160, 0.3f),
-            new pig(1640, height / 2 - 240, 0.3f)
+            new pig(1490, height / 2 - 160, 0.3f, ground),
+            new pig(1640, height / 2 - 240, 0.3f, ground)
         };
     }
 
@@ -387,10 +390,8 @@ private boolean checkPigCollision(Bird bird, pig pig) {
             if (pigIndex >= 0 && pigIndex < pigs.length && pigs[pigIndex] != null) {
                 // Dispose of the pig's resources
                 pigs[pigIndex].dispose();
-
                 // Remove the pig from the array
-                pigs[pigIndex] = null;
-
+                pigs[pigIndex].markAsDead();
                 // Check if all pigs are destroyed
                 checkLevelCompletion();
             }
@@ -404,7 +405,7 @@ private boolean checkPigCollision(Bird bird, pig pig) {
     private void checkLevelCompletion() {
         boolean allPigsDestroyed = true;
         for (pig pig : pigs) {
-            if (pig != null) {
+            if (pig != null && !pig.isDead()) {
                 allPigsDestroyed = false;
                 break;
             }
@@ -416,6 +417,7 @@ private boolean checkPigCollision(Bird bird, pig pig) {
             dispose();
         }
     }
+
     @Override
     public void render(float deltaTime) {
         Gdx.gl.glClearColor(0.9f, 0.9f, 0.9f, 1);
@@ -468,10 +470,12 @@ private boolean checkPigCollision(Bird bird, pig pig) {
         for (Obstacle obstacle : obstacles) {
             obstacle.update(deltaTime); // Update obstacle's position
             obstacle.draw(game.batch);
+            obstacle.checkPigContact(pigs); // Check if pigs are affected by crumbled obstacle
         }
 
         for (pig pig : pigs) {
             if (pig != null) {
+                pig.update(deltaTime);
                 pig.draw(game.batch);
             }
         }
