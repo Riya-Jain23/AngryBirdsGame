@@ -15,10 +15,10 @@ public class pig {
     private final Ground ground;
 
 
-    public pig(float x, float y, float scale, Ground ground) {
+    public pig(float x, float y, float scale, Ground ground, String path) {
         this.x = x;
         this.y = y;
-        this.texture = new Texture("pig1.png");
+        this.texture = new Texture(path);
         this.width = texture.getWidth() * scale;
         this.height = texture.getHeight() * scale;
         this.ground = ground;
@@ -81,7 +81,6 @@ public class pig {
         isDead = true; // Mark the pig as dead
     }
 
-    // Getter and setter for the pig's status
     public boolean isDead() {
         return isDead;
     }

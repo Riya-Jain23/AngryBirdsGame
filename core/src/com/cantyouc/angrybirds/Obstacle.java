@@ -29,11 +29,9 @@ public class Obstacle {
 
     public void update(float deltaTime) {
         if (pieces.isEmpty()) {
-            // Gravity effect on the obstacle
             this.x += xVelocity * deltaTime;
             this.y += yVelocity * deltaTime;
         } else {
-            // Update each piece of the crumbled obstacle
             for (Piece piece : pieces) {
                 piece.update(deltaTime);
             }
@@ -43,55 +41,45 @@ public class Obstacle {
 
     public void draw(SpriteBatch batch) {
         if (pieces.isEmpty()) {
-            // Draw the original obstacle
             batch.draw(texture, x, y);
         } else {
-            // Draw each piece of the crumbled obstacle
             for (Piece piece : pieces) {
                 piece.draw(batch);
             }
         }
     }
 
-    // Set new velocity when the obstacle is pushed
     public void push(float vx, float vy) {
         this.xVelocity = vx;
         this.yVelocity = vy;
     }
 
-    // Getters for collision detection
     public float getX() { return x; }
     public float getY() { return y; }
     public float getWidth() { return width; }
     public float getHeight() { return height; }
 
-    // Check if the obstacle is hit by the bird
     public boolean isHitByBird(Bird bird) {
         float birdX = bird.getX();
         float birdY = bird.getY();
         float birdWidth = bird.getWidth();
         float birdHeight = bird.getHeight();
 
-        // Check if the bird's bounding box intersects with the obstacle
         return (birdX < this.x + this.width && birdX + birdWidth > this.x &&
             birdY < this.y + this.height && birdY + birdHeight > this.y);
     }
 
-    // Split the obstacle into pieces upon collision
-    // Method to split the obstacle into random parts
     public void crumble() {
-        pieces.clear(); // Clear any previous pieces
+        pieces.clear();
         isCrumbling = true;
 
-        // Define number of pieces to break the obstacle into
-        int numPieces = 20; // Number of pieces (can adjust as needed)
+        int numPieces = 20;
 
-        // Randomly cut the texture into pieces
         for (int i = 0; i < numPieces; i++) {
-            float randomX = MathUtils.random(0, width - 20); // Random x position of the piece
-            float randomY = MathUtils.random(0, height - 20); // Random y position of the piece
-            float randomWidth = MathUtils.random(10, 50); // Random width of the piece
-            float randomHeight = MathUtils.random(10, 50); // Random height of the piece
+            float randomX = MathUtils.random(0, width - 20);
+            float randomY = MathUtils.random(0, height - 20);
+            float randomWidth = MathUtils.random(10, 50);
+            float randomHeight = MathUtils.random(10, 50);
 
             // Ensure that the piece is within the bounds of the obstacle texture
             if (randomX + randomWidth > width) randomWidth = width - randomX;

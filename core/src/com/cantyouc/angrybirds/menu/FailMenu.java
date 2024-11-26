@@ -50,7 +50,7 @@ public class FailMenu implements Screen {
 
         restartButton.addListener(event -> {
             if (event.isHandled()) {
-                game.setScreen(new MainScreen(game));
+                game.setScreen(new MainScreen(game, 1));
                 dispose();
             }
             return false;
@@ -102,6 +102,8 @@ public class FailMenu implements Screen {
         stage.dispose();
         background.dispose();
         skin.dispose();
+        backButtonImage.dispose();
+        restartButtonImage.dispose();
     }
 }
 

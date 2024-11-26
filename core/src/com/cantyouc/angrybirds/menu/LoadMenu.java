@@ -24,8 +24,6 @@ public class LoadMenu extends Menu {
         table.add(new Image(new Texture(Gdx.files.internal("loadGame.png")))).align(Align.center);
         table.row();
 
-        // Hard Coding 4 buttons for now
-        // This list will need to show the filled slots later
         for (int i = 0; i < 4; i++) {
             table.add(new ImageButton(
                 new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("emptySlotUp.png")))),

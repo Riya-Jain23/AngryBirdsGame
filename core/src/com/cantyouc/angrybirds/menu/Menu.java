@@ -35,7 +35,7 @@ public class Menu implements Screen {
         game.batch.end();
         stage.act(d);
         stage.draw();
-    }//add loading
+    }
 
     @Override
     public void show() {}

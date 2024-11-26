@@ -55,7 +55,7 @@ public class VictoryMenu implements Screen {
 
         restartButton.addListener(event -> {
             if (event.isHandled()) {
-                game.setScreen(new MainScreen(game));
+                game.setScreen(new MainScreen(game, 2));
                 dispose();
             }
             return false;
@@ -63,7 +63,7 @@ public class VictoryMenu implements Screen {
 
         nextButton.addListener(event -> {
             if (event.isHandled()) {
-                game.setScreen(new MainScreen(game));
+                game.setScreen(new MainScreen(game, 2));
                 dispose();
             }
             return false;

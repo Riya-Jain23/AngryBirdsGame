@@ -54,7 +54,7 @@ public class MainScreen implements Screen, Serializable {
     private boolean levelCompleted = false; // Flag to prevent multiple transitions
 
 
-    public MainScreen(final AngryBirds game) {
+    public MainScreen(final AngryBirds game, int level) {
         width = Gdx.graphics.getWidth();
         height = Gdx.graphics.getHeight();
         this.game = game;
@@ -68,8 +68,30 @@ public class MainScreen implements Screen, Serializable {
         viewport = new FitViewport(width, height, camera);
         stage = new Stage(viewport);
         skin = new Skin(Gdx.files.internal("orangepeelui/uiskin.json"));
-//        Gdx.input.setInputProcessor(stage);
-
+        slingshot = new Slingshot(300, height / 2-400, 80, 150);
+        ground = game.getGround();
+        switch (level) {
+            case 1:
+                initializeBirds();
+                initializeObstacles();
+                initializePigs();
+                break;
+            case 2:
+                initializeBirdsLevel2();
+                initializeObstaclesLevel2();
+                initializePigsLevel2();
+                break;
+            case 3:
+                initializeBirdsLevel3();
+                initializeObstaclesLevel3();
+                initializePigsLevel3();
+                break;
+            default:
+                // Default to level 1 if an invalid level is provided
+                initializeBirds();
+                initializeObstacles();
+                initializePigs();
+        }
         InputMultiplexer multiplexer = new InputMultiplexer();
         multiplexer.addProcessor(stage);
         multiplexer.addProcessor(new InputAdapter() {
@@ -150,92 +172,8 @@ public class MainScreen implements Screen, Serializable {
         });
         Gdx.input.setInputProcessor(multiplexer);
 
-
-
-
-
-        slingshot = new Slingshot(300, height / 2-400, 80, 150);
-        ground = game.getGround();
-        initializeBirds();
-        initializeObstacles();
-        initializePigs();
         createUI();
-
         setupNextBird();
-//        birds = new Bird[3];
-//        int birdWidth = 70;
-//        int birdHeight = 70;
-//        for (int i = 0; i < 3; i++) {
-//            int birdXPosition = 100*i;
-//            int birdYPosition = (int)(height / 2 + i * 50);
-//            birds[i] = new Bird(birdXPosition, birdYPosition, birdHeight, birdWidth, ground, false);
-//            birds[i].setImage(new TextureRegion(new Texture(Gdx.files.internal("bird" + (i + 1) + ".png"))));
-//        }
-//
-//        obstacles = new Obstacle[]{
-//                new Obstacle(1500, height / 2 - 400, "obstacle1.png"),
-//                new Obstacle(1500, height / 2 - 320, "obstacle1.png"),
-//                new Obstacle(1500, height / 2 - 240, "obstacle1.png"),
-//                new Obstacle(1650, height / 2 - 400, "obstacle1.png"),
-//                new Obstacle(1650, height / 2 - 320, "obstacle1.png")
-//        };
-//        pigs = new pig[]{
-//                new pig(1490, height / 2 - 160,0.3f),
-//                new pig(1640, height / 2 - 240,0.3f)
-//        };
-//
-//        Table root = new Table();
-//        root.setFillParent(true);
-//        stage.addActor(root);
-//
-//        Table table = new Table();
-//        root.add(table).growX().align(Align.top).colspan(4);
-//
-//        Button pauseButton = new Button(skin);
-//        Value buttonHeight = Value.percentHeight(2f, pauseButton);
-//        Value buttonWidth = Value.percentWidth(2f, pauseButton);
-//        Button.ButtonStyle style = new Button.ButtonStyle();
-//        style.up = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("pauseUp.png"))));
-//        style.down = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("pauseDown.png"))));
-//        pauseButton.setStyle(style);
-//
-//        pauseButton.addListener(new ChangeListener() {
-//            @Override
-//            public void changed(ChangeEvent event, Actor actor) {
-//                game.setScreen(new PauseMenu(game));
-//                dispose();
-//            }
-//        }
-//        );
-//
-//        table.add(pauseButton).align(Align.top | Align.left).padTop(10).expandX().width(buttonWidth).height(buttonHeight).padLeft(10);
-//
-//        Button invisButton = new Button(skin);
-//        invisButton.setColor(0.5f, 0.5f, 0.5f, 0f);
-//        table.add(invisButton).align(Align.top | Align.right).padTop(10).width(Value.percentWidth(1f, pauseButton)).expandX();
-//
-//        root.row();
-//
-//        // this touchpad will be converted to aim-angle-change touchpad
-//        Touchpad.TouchpadStyle touchpadStyle = new Touchpad.TouchpadStyle();
-//        touchpadStyle.knob = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("aim.png"))));
-//        touchpadStyle.background = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("transparent.png"))));
-//        final Touchpad touchpad = new Touchpad(0, touchpadStyle);
-//        touchpad.addListener(new ChangeListener() {
-//            @Override
-//            public void changed(ChangeEvent event, Actor actor) {
-//                if (touchpad.getKnobPercentX() > 0) {
-//                    game.getBird2().setXVelocity(1);
-//                } else if (touchpad.getKnobPercentX() < 0) {
-//                    game.getBird2().setXVelocity(-1);
-//                } else {
-//                    game.getBird2().setXVelocity(0);
-//                }
-//            }
-//        });
-//
-//        root.add(touchpad).expandX().colspan(4);
-//        createButtons();
     }
     private void setupNextBird() {
         if (currentBirdIndex < birds.length) {
@@ -247,20 +185,18 @@ public class MainScreen implements Screen, Serializable {
             }
             else {
                 // No birds left to set up
-                allBirdsExhausted = true;
+                currentBird.setExhausted(true);
+                checkLevelCompletion();
             }
+        } else{
+            checkLevelCompletion();
         }
     }
     private void initializeBirds() {
         birds = new Bird[3];
         int birdWidth = 70;
         int birdHeight = 80;
-//        for (int i = 0; i < 3; i++) {
-//            int birdXPosition = 150 * i;
-//            int birdYPosition = (int)(height / 2 + i * 50);
-//            birds[i] = new Bird(birdXPosition, birdYPosition, birdHeight, birdWidth, ground, false);
-//            birds[i].setImage(new TextureRegion(new Texture(Gdx.files.internal("bird" + (i + 1) + ".png"))));
-//        }
+
         int birdXPosition1 = 150;
         int birdYPosition1 = 200;
         birds[0] = new Bird(birdXPosition1, birdYPosition1, birdHeight, birdWidth, ground, false);
@@ -285,6 +221,98 @@ public class MainScreen implements Screen, Serializable {
             new Obstacle(1650, height / 2 - 320, "obstacle1.png")
         };
     }
+    private void initializeBirdsLevel2() {
+        birds = new Bird[3];
+        int birdWidth = 70;
+        int birdHeight = 80;
+
+        int birdXPosition1 = 150;
+        int birdYPosition1 = 200;
+        birds[0] = new Bird(birdXPosition1, birdYPosition1, birdHeight, birdWidth, ground, false);
+        birds[0].setImage(new TextureRegion(new Texture(Gdx.files.internal("bird1.png"))));
+
+        int birdXPosition2 = 200;
+        int birdYPosition2 = 150;
+        birds[1] = new Bird(birdXPosition2, birdYPosition2, birdHeight, birdWidth, ground, false);
+        birds[1].setImage(new TextureRegion(new Texture(Gdx.files.internal("bird2.png"))));
+
+        int birdXPosition3 = 100;
+        int birdYPosition3 = 150;
+        birds[2] = new Bird(birdXPosition3, birdYPosition3, birdHeight, birdWidth, ground, false);
+        birds[2].setImage(new TextureRegion(new Texture(Gdx.files.internal("bird3.png"))));
+    }
+
+    private void initializeObstaclesLevel2() {
+        obstacles = new Obstacle[]{
+            new Obstacle(1500, height / 2 - 400, "obstacle1.png"),
+            new Obstacle(1500, height / 2 - 320, "obstacle1.png"),
+            new Obstacle(1500, height / 2 - 240, "obstacle1.png"),
+            new Obstacle(1650, height / 2 - 400, "circle.png"),
+            new Obstacle(1650, height / 2 - 320, "circle.png"),
+            new Obstacle(1650, height / 2 - 200, "obstacle1.png"),
+            new Obstacle(1700, height / 2 - 250, "obstacle1.png")
+        };
+    }
+
+    private void initializePigsLevel2() {
+        pigs = new pig[]{
+            new pig(1490, height / 2 - 160, 0.3f, ground, "pig1.png"),
+            new pig(1640, height / 2 - 240, 0.3f, ground, "pig1.png"),
+            new pig(1700, height / 2 - 180, 0.3f, ground, "pig1.png")
+        };
+    }
+
+    private void initializeBirdsLevel3() {
+        birds = new Bird[4];
+        int birdWidth = 70;
+        int birdHeight = 80;
+
+        int birdXPosition1 = 150;
+        int birdYPosition1 = 200;
+        birds[0] = new Bird(birdXPosition1, birdYPosition1, birdHeight, birdWidth, ground, false);
+        birds[0].setImage(new TextureRegion(new Texture(Gdx.files.internal("bird1.png"))));
+
+        int birdXPosition2 = 200;
+        int birdYPosition2 = 150;
+        birds[1] = new Bird(birdXPosition2, birdYPosition2, birdHeight, birdWidth, ground, false);
+        birds[1].setImage(new TextureRegion(new Texture(Gdx.files.internal("bird2.png"))));
+
+        int birdXPosition3 = 100;
+        int birdYPosition3 = 150;
+        birds[2] = new Bird(birdXPosition3, birdYPosition3, birdHeight, birdWidth, ground, false);
+        birds[2].setImage(new TextureRegion(new Texture(Gdx.files.internal("bird3.png"))));
+
+        int birdXPosition4 = 20;
+        int birdYPosition4 = 150;
+        birds[3] = new Bird(birdXPosition4, birdYPosition4, birdHeight, birdWidth, ground, false);
+        birds[3].setImage(new TextureRegion(new Texture(Gdx.files.internal("bird3.png"))));
+    }
+
+    private void initializeObstaclesLevel3() {
+        obstacles = new Obstacle[]{
+            // More complex obstacle arrangement
+            new Obstacle(1500, height / 2 - 400, "obstacle1.png"),
+            new Obstacle(1500, height / 2 - 320, "obstacle1.png"),
+            new Obstacle(1500, height / 2 - 240, "obstacle1.png"),
+            new Obstacle(1650, height / 2 - 400, "obstacle1.png"),
+            new Obstacle(1650, height / 2 - 320, "obstacle1.png"),
+            new Obstacle(1700, height / 2 - 250, "obstacle1.png"),
+            new Obstacle(1750, height / 2 - 300, "obstacle1.png"),
+            new Obstacle(1550, height / 2 - 180, "obstacle1.png"),
+            new Obstacle(1600, height / 2 - 220, "obstacle1.png")
+        };
+    }
+
+    private void initializePigsLevel3() {
+        pigs = new pig[]{
+            new pig(1490, height / 2 - 160, 0.3f, ground, "pig1.png"),
+            new pig(1640, height / 2 - 240, 0.3f, ground, "pig1.png"),
+            new pig(1700, height / 2 - 180, 0.3f, ground, "pig1.png"),
+            new pig(1750, height / 2 - 250, 0.3f, ground, "pig1.png"),
+            new pig(1550, height / 2 - 200, 0.3f, ground, "pig1.png")
+        };
+    }
+
     private void createUI() {
         Table root = new Table();
         root.setFillParent(true);
@@ -350,39 +378,11 @@ public class MainScreen implements Screen, Serializable {
     }
     private void initializePigs() {
         pigs = new pig[]{
-            new pig(1490, height / 2 - 160, 0.3f, ground),
-            new pig(1640, height / 2 - 240, 0.3f, ground)
+            new pig(1490, height / 2 - 160, 0.3f, ground, "pig1.png"),
+            new pig(1640, height / 2 - 240, 0.3f, ground, "pig1.png")
         };
     }
 
-//    private void createButtons() {
-//        Button victoryButton = new Button(skin);
-//        victoryButton.add(new Label("Show Victory", skin));
-//        victoryButton.addListener(new ChangeListener() {
-//            @Override
-//            public void changed(ChangeEvent event, Actor actor) {
-//                game.setScreen(new VictoryMenu(game)); // Show victory menu
-//            }
-//        });
-//
-//        Button failButton = new Button(skin);
-//        failButton.add(new Label("Show Fail", skin));
-//        failButton.addListener(new ChangeListener() {
-//            @Override
-//            public void changed(ChangeEvent event, Actor actor) {
-//                game.setScreen(new FailMenu(game)); // Show fail menu
-//            }
-//        });
-//
-//        Table buttonTable = new Table();
-//        buttonTable.setFillParent(true);
-//        buttonTable.top().right();
-//        buttonTable.add(victoryButton).pad(10).width(200).height(50).align(Align.bottomLeft);
-//        buttonTable.row();
-//        buttonTable.add(failButton).pad(10).width(200).height(50).align(Align.bottomLeft);
-//
-//        stage.addActor(buttonTable);
-//    }
 private boolean checkPigCollision(Bird bird, pig pig) {
     if (pig == null) return false;
 
@@ -420,6 +420,8 @@ private boolean checkPigCollision(Bird bird, pig pig) {
         }
 
         // Check if all birds are exhausted
+        boolean allBirdsExhausted = true;
+//        allBirdsExhausted = true;
         for (Bird bird : birds) {
             if (bird != null && !bird.isExhausted()) {
                 allBirdsExhausted = false;
@@ -476,13 +478,16 @@ private boolean checkPigCollision(Bird bird, pig pig) {
                     if (Math.abs(bird.getXVelocity()) < 0.1 && Math.abs(bird.getYVelocity()) < 0.1) {
                         currentBirdIndex++;
                         setupNextBird();
+                        checkLevelCompletion();
                     }
                 }
             } catch (BirdOutOfScreenException ex) {
                 bird.setXVelocity(0);
                 bird.setYVelocity(0);
+                bird.setExhausted(true);
                 currentBirdIndex++;
                 setupNextBird();
+                checkLevelCompletion();
             }
         }
 

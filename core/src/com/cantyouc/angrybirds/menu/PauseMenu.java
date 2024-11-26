@@ -26,7 +26,7 @@ public class PauseMenu extends Menu {
         resume.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                game.setScreen(new MainScreen(game));
+                game.setScreen(new MainScreen(game, 1));
                 dispose();
             }
         });
