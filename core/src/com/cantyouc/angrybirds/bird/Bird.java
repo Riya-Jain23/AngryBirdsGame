@@ -20,6 +20,7 @@ public class Bird {
     protected TextureRegion image;
     protected int maxAttackPower;
     private int attackAngle;
+    private boolean exhausted;
 
     public Bird(int x, int y,int height, int width, Ground ground, boolean flipped) {
         this.x = x;
@@ -56,6 +57,13 @@ public class Bird {
 
     public int getY() {
         return y;
+    }
+    public boolean isExhausted() {
+        return exhausted;
+    }
+
+    public void setExhausted(boolean exhausted) {
+        this.exhausted = exhausted;
     }
 
     // Launch method to set the initial velocity based on angle and power

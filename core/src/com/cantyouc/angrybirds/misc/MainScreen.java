@@ -15,6 +15,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.cantyouc.angrybirds.menu.FailMenu;
 import com.cantyouc.angrybirds.menu.VictoryMenu;
 import com.cantyouc.angrybirds.pig;
 import com.cantyouc.angrybirds.Obstacle;
@@ -46,6 +47,7 @@ public class MainScreen implements Screen, Serializable {
     private boolean birdLaunched = false;
     private Bird currentBird;
     private boolean allTargetsCleared = false;
+    private boolean allBirdsExhausted = true;
     private float launchPower = 1.0f;
     private static final float MAX_DRAG_DISTANCE = 100f;
     private float levelCompletionDelay = 0f; // Track time until level completion delay
@@ -238,9 +240,15 @@ public class MainScreen implements Screen, Serializable {
     private void setupNextBird() {
         if (currentBirdIndex < birds.length) {
             currentBird = birds[currentBirdIndex];
-            // Position bird at slingshot
-            currentBird.setPosition(slingshot.getX()-15, slingshot.getY()+50);
-            birdLaunched = false;
+            if (currentBird != null && !currentBird.isExhausted()) {
+                // Position bird at slingshot
+                currentBird.setPosition(slingshot.getX() - 15, slingshot.getY() + 50);
+                birdLaunched = false;
+            }
+            else {
+                // No birds left to set up
+                allBirdsExhausted = true;
+            }
         }
     }
     private void initializeBirds() {
@@ -411,9 +419,21 @@ private boolean checkPigCollision(Bird bird, pig pig) {
             }
         }
 
+        // Check if all birds are exhausted
+        for (Bird bird : birds) {
+            if (bird != null && !bird.isExhausted()) {
+                allBirdsExhausted = false;
+                break;
+            }
+        }
+
         if (allPigsDestroyed) {
             // Transition to victory screen
             game.setScreen(new VictoryMenu(game));
+            dispose();
+        }
+        else if (allBirdsExhausted && !allPigsDestroyed) {
+            game.setScreen(new FailMenu(game));
             dispose();
         }
     }
