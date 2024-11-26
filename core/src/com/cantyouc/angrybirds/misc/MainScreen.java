@@ -103,8 +103,8 @@ public class MainScreen implements Screen, Serializable {
 
                     // Update bird position while dragging
                     currentBird.setPosition(
-                        slingshot.getX() + (dragEndX - dragStartX),
-                        slingshot.getY() + (dragEndY - dragStartY)
+                        slingshot.getX() + (dragEndX - dragStartX) - 15,
+                        slingshot.getY() + (dragEndY - dragStartY) + 50
                     );
                     return true;
                 }
@@ -235,7 +235,7 @@ public class MainScreen implements Screen, Serializable {
         if (currentBirdIndex < birds.length) {
             currentBird = birds[currentBirdIndex];
             // Position bird at slingshot
-            currentBird.setPosition(slingshot.getX(), slingshot.getY());
+            currentBird.setPosition(slingshot.getX()-15, slingshot.getY()+50);
             birdLaunched = false;
         }
     }
@@ -243,12 +243,26 @@ public class MainScreen implements Screen, Serializable {
         birds = new Bird[3];
         int birdWidth = 70;
         int birdHeight = 80;
-        for (int i = 0; i < 3; i++) {
-            int birdXPosition = 150 * i;
-            int birdYPosition = (int)(height / 2 + i * 50);
-            birds[i] = new Bird(birdXPosition, birdYPosition, birdHeight, birdWidth, ground, false);
-            birds[i].setImage(new TextureRegion(new Texture(Gdx.files.internal("bird" + (i + 1) + ".png"))));
-        }
+//        for (int i = 0; i < 3; i++) {
+//            int birdXPosition = 150 * i;
+//            int birdYPosition = (int)(height / 2 + i * 50);
+//            birds[i] = new Bird(birdXPosition, birdYPosition, birdHeight, birdWidth, ground, false);
+//            birds[i].setImage(new TextureRegion(new Texture(Gdx.files.internal("bird" + (i + 1) + ".png"))));
+//        }
+        int birdXPosition1 = 150;
+        int birdYPosition1 = 200;
+        birds[0] = new Bird(birdXPosition1, birdYPosition1, birdHeight, birdWidth, ground, false);
+        birds[0].setImage(new TextureRegion(new Texture(Gdx.files.internal("bird1.png"))));
+
+        int birdXPosition2 = 200;
+        int birdYPosition2 = 150;
+        birds[1] = new Bird(birdXPosition2, birdYPosition2, birdHeight, birdWidth, ground, false);
+        birds[1].setImage(new TextureRegion(new Texture(Gdx.files.internal("bird2.png"))));
+
+        int birdXPosition3 = 100;
+        int birdYPosition3 = 150;
+        birds[2] = new Bird(birdXPosition3, birdYPosition3, birdHeight, birdWidth, ground, false);
+        birds[2].setImage(new TextureRegion(new Texture(Gdx.files.internal("bird3.png"))));
     }
     private void initializeObstacles() {
         obstacles = new Obstacle[]{

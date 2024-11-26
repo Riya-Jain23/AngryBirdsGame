@@ -8,15 +8,14 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
 public class Ground {
+    public static final float GRAVITY = 9.8f;
     private final float height;
     private final int width;
     private final float y;
-    public static final float GRAVITY = 9.8f; // Adjust based on game scale
-
 
     public Ground(int width) {
         this.width = width;
-        this.height = 150;
+        this.height = 70;
         this.y = 0;
     }
 

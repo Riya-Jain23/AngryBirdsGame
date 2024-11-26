@@ -66,10 +66,10 @@ public class Bird {
     }
     public void move(float deltaTime) throws BirdOutOfScreenException {
         // Update position using deltaTime and velocities
-        if (x+xVelocity > 1 && x+xVelocity < ground.getWidth()-width-1) {
+        if (x + xVelocity > 1 && x + xVelocity < ground.getWidth() - width - 1) {
             x += xVelocity;}
         x += xVelocity * deltaTime;  // Apply horizontal velocity
-        if (y+yVelocity > 1 && y+yVelocity < ground.getWidth()-width-1) {
+        if (y + yVelocity > 1 && y + yVelocity < ground.getWidth() - width - 1) {
             y += yVelocity;}
         yVelocity -= Ground.GRAVITY * deltaTime;  // Apply gravity to vertical velocity
         y += yVelocity * deltaTime;  // Apply vertical velocity
