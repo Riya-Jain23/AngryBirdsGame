@@ -15,6 +15,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.cantyouc.angrybirds.menu.VictoryMenu;
 import com.cantyouc.angrybirds.pig;
 import com.cantyouc.angrybirds.Obstacle;
 import com.cantyouc.angrybirds.Slingshot;
@@ -371,7 +372,50 @@ public class MainScreen implements Screen, Serializable {
 //
 //        stage.addActor(buttonTable);
 //    }
+private boolean checkPigCollision(Bird bird, pig pig) {
+    if (pig == null) return false;
 
+    // Simple axis-aligned bounding box (AABB) collision detection
+    return bird.getX() < pig.getX() + pig.getWidth() &&
+        bird.getX() + bird.getWidth() > pig.getX() &&
+        bird.getY() < pig.getY() + pig.getHeight() &&
+        bird.getY() + bird.getHeight() > pig.getY();
+}
+
+    private void destroyPig(int pigIndex) {
+        try {
+            if (pigIndex >= 0 && pigIndex < pigs.length && pigs[pigIndex] != null) {
+                // Dispose of the pig's resources
+                pigs[pigIndex].dispose();
+
+                // Remove the pig from the array
+                pigs[pigIndex] = null;
+
+                // Check if all pigs are destroyed
+                checkLevelCompletion();
+            }
+        } catch (Exception e) {
+            // Log the error or handle it appropriately
+            System.err.println("Error destroying pig: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    private void checkLevelCompletion() {
+        boolean allPigsDestroyed = true;
+        for (pig pig : pigs) {
+            if (pig != null) {
+                allPigsDestroyed = false;
+                break;
+            }
+        }
+
+        if (allPigsDestroyed) {
+            // Transition to victory screen
+            game.setScreen(new VictoryMenu(game));
+            dispose();
+        }
+    }
     @Override
     public void render(float deltaTime) {
         Gdx.gl.glClearColor(0.9f, 0.9f, 0.9f, 1);
@@ -402,7 +446,11 @@ public class MainScreen implements Screen, Serializable {
                             obstacle.crumble();
                         }
                     }
-
+                    for (int i = 0; i < pigs.length; i++) {
+                        if (checkPigCollision(bird, pigs[i])) {
+                            destroyPig(i);
+                        }
+                    }
                     if (Math.abs(bird.getXVelocity()) < 0.1 && Math.abs(bird.getYVelocity()) < 0.1) {
                         currentBirdIndex++;
                         setupNextBird();
@@ -423,7 +471,9 @@ public class MainScreen implements Screen, Serializable {
         }
 
         for (pig pig : pigs) {
-            pig.draw(game.batch);
+            if (pig != null) {
+                pig.draw(game.batch);
+            }
         }
 
         game.batch.end();
