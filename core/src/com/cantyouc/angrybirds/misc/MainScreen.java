@@ -38,6 +38,7 @@ public class MainScreen implements Screen, Serializable {
     public final AngryBirds game;
     private Slingshot slingshot;
     private Bird[] birds;
+    private final int level;
     private int currentBirdIndex = 0;
     private Obstacle[] obstacles;
     private pig[] pigs;
@@ -58,6 +59,7 @@ public class MainScreen implements Screen, Serializable {
         width = Gdx.graphics.getWidth();
         height = Gdx.graphics.getHeight();
         this.game = game;
+        this.level = level;
         renderer = new ShapeRenderer();
         background = new Texture("background.jpg");
 
@@ -183,14 +185,13 @@ public class MainScreen implements Screen, Serializable {
                 currentBird.setPosition(slingshot.getX() - 15, slingshot.getY() + 50);
                 birdLaunched = false;
             }
-            else {
-                // No birds left to set up
-                currentBird.setExhausted(true);
-                checkLevelCompletion();
+            else{
+                currentBird.isExhausted();
+                currentBirdIndex++; // Move to the next bird
+                setupNextBird(); // Call recursively to set up the next bird
             }
-        } else{
-            checkLevelCompletion();
         }
+
     }
     private void initializeBirds() {
         birds = new Bird[3];
@@ -410,14 +411,13 @@ private boolean checkPigCollision(Bird bird, pig pig) {
         bird.getY() + bird.getHeight() > pig.getY();
 }
 
-    private void destroyPig(int pigIndex) {
+    public void destroyPig(int pigIndex) {
         try {
             if (pigIndex >= 0 && pigIndex < pigs.length && pigs[pigIndex] != null) {
                 // Dispose of the pig's resources
                 pigs[pigIndex].dispose();
                 // Remove the pig from the array
                 pigs[pigIndex].markAsDead();
-                // Check if all pigs are destroyed
                 checkLevelCompletion();
             }
         } catch (Exception e) {
@@ -432,19 +432,26 @@ private boolean checkPigCollision(Bird bird, pig pig) {
         for (pig pig : pigs) {
             if (pig != null && !pig.isDead()) {
                 allPigsDestroyed = false;
+                System.out.println("Pig is alive at position: " + pig.getX() + ", " + pig.getY());
                 break;
             }
         }
-
-        // Check if all birds are exhausted
         boolean allBirdsExhausted = true;
-//        allBirdsExhausted = true;
         for (Bird bird : birds) {
-            if (bird != null && !bird.isExhausted()) {
+            if (!bird.isExhausted()) {
                 allBirdsExhausted = false;
+                System.out.println("Bird is not exhausted. Remaining birds: " + bird.getX() + ", " + bird.getY());
                 break;
             }
+            else {
+                allBirdsExhausted = true;
+            }
         }
+//        allBirdsExhausted = true;
+
+
+        System.out.println("All pigs destroyed: " + allPigsDestroyed);
+        System.out.println("All birds exhausted: " + allBirdsExhausted);
 
         if (allPigsDestroyed) {
             // Transition to victory screen
@@ -452,6 +459,7 @@ private boolean checkPigCollision(Bird bird, pig pig) {
             dispose();
         }
         else if (allBirdsExhausted && !allPigsDestroyed) {
+            System.out.println("Transitioning to FailMenu...");
             game.setScreen(new FailMenu(game));
             dispose();
         }
@@ -495,16 +503,20 @@ private boolean checkPigCollision(Bird bird, pig pig) {
                     if (Math.abs(bird.getXVelocity()) < 0.1 && Math.abs(bird.getYVelocity()) < 0.1) {
                         currentBirdIndex++;
                         setupNextBird();
-                        checkLevelCompletion();
+                        if (currentBirdIndex >= birds.length){
+                            checkLevelCompletion();
+                        }
                     }
                 }
             } catch (BirdOutOfScreenException ex) {
                 bird.setXVelocity(0);
                 bird.setYVelocity(0);
-                bird.setExhausted(true);
+                bird.isExhausted();
                 currentBirdIndex++;
                 setupNextBird();
-                checkLevelCompletion();
+                if (currentBirdIndex >= birds.length) {
+                    checkLevelCompletion();
+                }
             }
         }
 

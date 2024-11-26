@@ -23,6 +23,7 @@ public class VictoryMenu implements Screen {
     private final Texture backButtonImage;
     private final Texture restartButtonImage;
     private final Texture nextButtonImage;
+    public static int currentLevel;
 
 
     public VictoryMenu(AngryBirds game) {
@@ -55,7 +56,7 @@ public class VictoryMenu implements Screen {
 
         restartButton.addListener(event -> {
             if (event.isHandled()) {
-                game.setScreen(new MainScreen(game, 2));
+                game.setScreen(new MainScreen(game, currentLevel));
                 dispose();
             }
             return false;
@@ -63,7 +64,9 @@ public class VictoryMenu implements Screen {
 
         nextButton.addListener(event -> {
             if (event.isHandled()) {
-                game.setScreen(new MainScreen(game, 2));
+                // Go to the next level, or wrap around to the first level if on the last one
+                currentLevel = (currentLevel % 3) + 1;  // Assuming there are 3 levels
+                game.setScreen(new MainScreen(game, currentLevel));
                 dispose();
             }
             return false;

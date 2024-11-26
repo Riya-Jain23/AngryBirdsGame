@@ -2,6 +2,7 @@ package com.cantyouc.angrybirds;
 
 import com.badlogic.gdx.math.Rectangle;
 import com.cantyouc.angrybirds.misc.Ground;
+import com.cantyouc.angrybirds.misc.MainScreen;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
@@ -39,10 +40,13 @@ public class pig {
         if (y <= ground.getHeight()) {
             y = (int) ground.getHeight();  // Snap to ground level
             velocityY = 0;  // Stop vertical motion
+            markAsDead();
+            dispose();
         }
 
-        // Update the pig's vertical position based on its velocity
-        y += velocityY * deltaTime;
+        if (!isDead) {
+            y += velocityY * deltaTime;
+        }
 
     }
 
