@@ -244,21 +244,31 @@ public class MainScreen implements Screen, Serializable {
 
     private void initializeObstaclesLevel2() {
         obstacles = new Obstacle[]{
+            new Obstacle(1300, height / 2 - 400, "obstacle1.png"),
             new Obstacle(1500, height / 2 - 400, "obstacle1.png"),
-            new Obstacle(1500, height / 2 - 320, "obstacle1.png"),
-            new Obstacle(1500, height / 2 - 240, "obstacle1.png"),
-            new Obstacle(1650, height / 2 - 400, "circle.png"),
-            new Obstacle(1650, height / 2 - 320, "circle.png"),
-            new Obstacle(1650, height / 2 - 200, "obstacle1.png"),
-            new Obstacle(1700, height / 2 - 250, "obstacle1.png")
+            new Obstacle(1300, height / 2 - 320, "obstacle1.png"),
+            new Obstacle(1500, height / 2 - 320, "line.png"),
+            new Obstacle(1500, height / 2 - 280, "line.png"),
+            new Obstacle(1350, height / 2 - 237, "line2.png"),
+            new Obstacle(1300, height / 2 - 225, "obstacle1.png"),
+            new Obstacle(1300, height / 2 - 145, "obstacle1.png"),
+            new Obstacle(1250, height / 2 - 60, "line2.png"),
+
+            new Obstacle(1100, height / 2 - 400, "obstacle1.png"),
+            new Obstacle(1100, height / 2 - 320, "obstacle1.png"),
+            new Obstacle(1100, height / 2 - 240, "obstacle1.png"),
+            new Obstacle(1100, height / 2 - 160, "obstacle1.png"),
+            new Obstacle(1100, height / 2 - 80, "obstacle1.png"),
+            new Obstacle(1100, height / 2, "obstacle1.png"),
+
         };
     }
 
     private void initializePigsLevel2() {
         pigs = new pig[]{
-            new pig(1490, height / 2 - 160, 0.3f, ground, "pig1.png"),
-            new pig(1640, height / 2 - 240, 0.3f, ground, "pig1.png"),
-            new pig(1700, height / 2 - 180, 0.3f, ground, "pig1.png")
+            new pig(1400, height / 2 - 220, 0.3f, ground, "pig2.png"),
+            new pig(1280, height / 2 - 50, 0.3f, ground, "pig2.png"),
+            new pig(1080, height / 2 + 80, 0.3f, ground, "pig2.png")
         };
     }
 
@@ -291,25 +301,32 @@ public class MainScreen implements Screen, Serializable {
     private void initializeObstaclesLevel3() {
         obstacles = new Obstacle[]{
             // More complex obstacle arrangement
+            new Obstacle(1300, height / 2 - 400, "obstacle1.png"),
             new Obstacle(1500, height / 2 - 400, "obstacle1.png"),
-            new Obstacle(1500, height / 2 - 320, "obstacle1.png"),
-            new Obstacle(1500, height / 2 - 240, "obstacle1.png"),
-            new Obstacle(1650, height / 2 - 400, "obstacle1.png"),
-            new Obstacle(1650, height / 2 - 320, "obstacle1.png"),
-            new Obstacle(1700, height / 2 - 250, "obstacle1.png"),
-            new Obstacle(1750, height / 2 - 300, "obstacle1.png"),
-            new Obstacle(1550, height / 2 - 180, "obstacle1.png"),
-            new Obstacle(1600, height / 2 - 220, "obstacle1.png")
+            new Obstacle(1300, height / 2 - 320, "obstacle1.png"),
+            new Obstacle(1500, height / 2 - 320, "line.png"),
+            new Obstacle(1500, height / 2 - 280, "line.png"),
+            new Obstacle(1350, height / 2 - 237, "line2.png"),
+            new Obstacle(1300, height / 2 - 225, "obstacle1.png"),
+            new Obstacle(1300, height / 2 - 145, "obstacle1.png"),
+            new Obstacle(1250, height / 2 - 60, "line2.png"),
+
+            new Obstacle(1100, height / 2 - 400, "obstacle1.png"),
+            new Obstacle(1100, height / 2 - 320, "obstacle1.png"),
+            new Obstacle(1100, height / 2 - 240, "obstacle1.png"),
+            new Obstacle(1100, height / 2 - 160, "obstacle1.png"),
+            new Obstacle(1100, height / 2 - 80, "obstacle1.png"),
+            new Obstacle(1100, height / 2, "obstacle1.png"),
         };
     }
 
     private void initializePigsLevel3() {
         pigs = new pig[]{
-            new pig(1490, height / 2 - 160, 0.3f, ground, "pig1.png"),
-            new pig(1640, height / 2 - 240, 0.3f, ground, "pig1.png"),
-            new pig(1700, height / 2 - 180, 0.3f, ground, "pig1.png"),
-            new pig(1750, height / 2 - 250, 0.3f, ground, "pig1.png"),
-            new pig(1550, height / 2 - 200, 0.3f, ground, "pig1.png")
+            new pig(1400, height / 2 - 220, 0.3f, ground, "pig3.png"),
+            new pig(1280, height / 2 - 50, 0.3f, ground, "pig3.png"),
+            new pig(1080, height / 2 + 80, 0.3f, ground, "pig3.png"),
+            new pig(950, height / 2 - 400, 0.3f, ground, "pig3.png"),
+            new pig(1600, height / 2 - 400, 0.3f, ground, "pig3.png")
         };
     }
 
