@@ -15,6 +15,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.cantyouc.angrybirds.bird.YellowBird;
 import com.cantyouc.angrybirds.menu.FailMenu;
 import com.cantyouc.angrybirds.menu.VictoryMenu;
 import com.cantyouc.angrybirds.pig;
@@ -210,7 +211,7 @@ public class MainScreen implements Screen, Serializable {
 
         int birdXPosition3 = 100;
         int birdYPosition3 = 150;
-        birds[2] = new Bird(birdXPosition3, birdYPosition3, birdHeight, birdWidth, ground, false);
+        birds[2] = new YellowBird(birdXPosition3, birdYPosition3, birdHeight, birdWidth, ground, false);
         birds[2].setImage(new TextureRegion(new Texture(Gdx.files.internal("bird3.png"))));
     }
     private void initializeObstacles() {
@@ -239,7 +240,7 @@ public class MainScreen implements Screen, Serializable {
 
         int birdXPosition3 = 100;
         int birdYPosition3 = 150;
-        birds[2] = new Bird(birdXPosition3, birdYPosition3, birdHeight, birdWidth, ground, false);
+        birds[2] = new YellowBird(birdXPosition3, birdYPosition3, birdHeight, birdWidth, ground, false);
         birds[2].setImage(new TextureRegion(new Texture(Gdx.files.internal("bird3.png"))));
     }
 
@@ -290,12 +291,12 @@ public class MainScreen implements Screen, Serializable {
 
         int birdXPosition3 = 100;
         int birdYPosition3 = 150;
-        birds[2] = new Bird(birdXPosition3, birdYPosition3, birdHeight, birdWidth, ground, false);
+        birds[2] = new YellowBird(birdXPosition3, birdYPosition3, birdHeight, birdWidth, ground, false);
         birds[2].setImage(new TextureRegion(new Texture(Gdx.files.internal("bird3.png"))));
 
         int birdXPosition4 = 20;
         int birdYPosition4 = 150;
-        birds[3] = new Bird(birdXPosition4, birdYPosition4, birdHeight, birdWidth, ground, false);
+        birds[3] = new YellowBird(birdXPosition4, birdYPosition4, birdHeight, birdWidth, ground, false);
         birds[3].setImage(new TextureRegion(new Texture(Gdx.files.internal("bird3.png"))));
     }
 
