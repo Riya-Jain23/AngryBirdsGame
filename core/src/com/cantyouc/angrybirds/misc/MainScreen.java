@@ -15,6 +15,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.cantyouc.angrybirds.bird.Black;
 import com.cantyouc.angrybirds.bird.YellowBird;
 import com.cantyouc.angrybirds.menu.FailMenu;
 import com.cantyouc.angrybirds.menu.VictoryMenu;
@@ -206,7 +207,7 @@ public class MainScreen implements Screen, Serializable {
 
         int birdXPosition2 = 200;
         int birdYPosition2 = 150;
-        birds[1] = new Bird(birdXPosition2, birdYPosition2, birdHeight, birdWidth, ground, false);
+        birds[1] = new Black(birdXPosition2, birdYPosition2, birdHeight, birdWidth, ground, false);
         birds[1].setImage(new TextureRegion(new Texture(Gdx.files.internal("bird2.png"))));
 
         int birdXPosition3 = 100;
@@ -235,7 +236,7 @@ public class MainScreen implements Screen, Serializable {
 
         int birdXPosition2 = 200;
         int birdYPosition2 = 150;
-        birds[1] = new Bird(birdXPosition2, birdYPosition2, birdHeight, birdWidth, ground, false);
+        birds[1] = new Black(birdXPosition2, birdYPosition2, birdHeight, birdWidth, ground, false);
         birds[1].setImage(new TextureRegion(new Texture(Gdx.files.internal("bird2.png"))));
 
         int birdXPosition3 = 100;
@@ -286,7 +287,7 @@ public class MainScreen implements Screen, Serializable {
 
         int birdXPosition2 = 200;
         int birdYPosition2 = 150;
-        birds[1] = new Bird(birdXPosition2, birdYPosition2, birdHeight, birdWidth, ground, false);
+        birds[1] = new Black(birdXPosition2, birdYPosition2, birdHeight, birdWidth, ground, false);
         birds[1].setImage(new TextureRegion(new Texture(Gdx.files.internal("bird2.png"))));
 
         int birdXPosition3 = 100;
@@ -485,6 +486,44 @@ private boolean checkPigCollision(Bird bird, pig pig) {
                 bird.draw(game.batch);
                 if (bird == currentBird && birdLaunched) {
                     bird.move(deltaTime);
+                    if (bird instanceof Black) {
+                        Black blackBird = (Black) bird;
+                        boolean shouldExplode = false;
+                        // Check for obstacle collision
+                        for (Obstacle obstacle : obstacles) {
+                            if (obstacle.isHitByBird(bird)) {
+                                shouldExplode = true;
+                                break;
+                            }
+                        }
+                        for (pig p : pigs) {
+                            if (checkPigCollision(bird, p)) {
+                                shouldExplode = true;
+                                break;
+                            }
+                        }
+                        if (Math.abs(bird.getX() - 200) > 500f) {
+                            shouldExplode = true;
+                        }
+
+//                        float distanceTraveled = calculateDistanceTraveled(bird);
+//                        if (distanceTraveled > 500f) {  // Adjust threshold as needed
+//                            shouldExplode = true;
+//                        }
+                        if (shouldExplode && !blackBird.hasExploded()) {
+                            blackBird.explode(obstacles, pigs);
+                        }
+                        // Check for pig collision
+                        for (int i = 0; i < pigs.length; i++) {
+                            if (checkPigCollision(bird, pigs[i])) {
+                                if (bird instanceof Black) {
+                                    ((Black) bird).explode(obstacles, pigs);
+                                }
+                                destroyPig(i);
+                                break;
+                            }
+                        }
+                    }
 
                     // Check for collisions with obstacles
                     for (Obstacle obstacle : obstacles) {
@@ -563,6 +602,10 @@ private boolean checkPigCollision(Bird bird, pig pig) {
 
         stage.act();
         stage.draw();
+    }
+
+    private float calculateDistanceTraveled(Bird bird) {
+        return Math.abs(bird.getX() - 200);
     }
 
     // Collision detection method
@@ -653,4 +696,5 @@ private boolean checkPigCollision(Bird bird, pig pig) {
         stage.dispose();
         background.dispose();
     }
+
 }
