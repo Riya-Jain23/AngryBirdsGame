@@ -29,7 +29,7 @@ import com.cantyouc.angrybirds.menu.PauseMenu;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-public class MainScreen implements Screen, Serializable {
+public class MainScreen extends ScreenAdapter implements Screen, Serializable  {
     private int width, height;
     private final Stage stage;
     private final Skin skin;
@@ -55,6 +55,7 @@ public class MainScreen implements Screen, Serializable {
     private static final float MAX_DRAG_DISTANCE = 100f;
     private float levelCompletionDelay = 0f; // Track time until level completion delay
     private boolean levelCompleted = false; // Flag to prevent multiple transitions
+    private boolean spacebarPressed;
 
 
     public MainScreen(final AngryBirds game, int level) {
@@ -167,6 +168,21 @@ public class MainScreen implements Screen, Serializable {
                     birdLaunched = true;
                     isDragging = false;
                     return true;
+                }
+                return false;
+            }
+
+            @Override
+            public boolean keyDown(int keycode) {
+                if (keycode == Input.Keys.SPACE) {  // Check if the space bar is pressed
+                    if (currentBird instanceof Black && birdLaunched) {
+                        Black blackBird = (Black) currentBird;
+                        if (!blackBird.hasExploded()) {
+                            blackBird.setSpacebarPressed(true);
+                            blackBird.triggerExplosion();  // Set the flag to trigger explosion
+                            return true;
+                        }
+                    }
                 }
                 return false;
             }
@@ -487,42 +503,16 @@ private boolean checkPigCollision(Bird bird, pig pig) {
                     bird.move(deltaTime);
                     if (bird instanceof Black) {
                         Black blackBird = (Black) bird;
-                        boolean shouldExplode = false;
-                        // Check for obstacle collision
-                        for (Obstacle obstacle : obstacles) {
-                            if (obstacle.isHitByBird(bird)) {
-                                shouldExplode = true;
-                                break;
-                            }
-                        }
-                        for (pig p : pigs) {
-                            if (checkPigCollision(bird, p)) {
-                                shouldExplode = true;
-                                break;
-                            }
-                        }
-                        if (Math.abs(bird.getX() - 200) > 500f) {
-                            shouldExplode = true;
-                        }
+                        blackBird.renderExplosion(game.batch);
 
-//                        float distanceTraveled = calculateDistanceTraveled(bird);
-//                        if (distanceTraveled > 500f) {  // Adjust threshold as needed
-//                            shouldExplode = true;
-//                        }
-                        if (shouldExplode && !blackBird.hasExploded()) {
+
+                        // Check if the explosion flag is set and the bird hasn't exploded yet
+                        if (blackBird.shouldTriggerExplosion() && !blackBird.hasExploded()) {
                             blackBird.explode(obstacles, pigs);
-                        }
-                        // Check for pig collision
-                        for (int i = 0; i < pigs.length; i++) {
-                            if (checkPigCollision(bird, pigs[i])) {
-                                if (bird instanceof Black) {
-                                    ((Black) bird).explode(obstacles, pigs);
-                                }
-                                destroyPig(i);
-                                break;
-                            }
+                            blackBird.resetExplosionFlag();  // Reset the flag after explosion
                         }
                     }
+
 
                     // Check for collisions with obstacles
                     for (Obstacle obstacle : obstacles) {

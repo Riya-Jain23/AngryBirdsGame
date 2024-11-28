@@ -111,7 +111,7 @@ public class Obstacle {
             for (pig pig : pigs) {
                 if (pig != null && !pig.isDead() && pig.isInContactWithObstacle(this)) {
                     // If a pig is in contact with the crumbling obstacle, apply gravity or force
-                    pig.applyForce(-50);  // Apply a downward force to simulate falling
+                    pig.applyForce(-100);  // Apply a downward force to simulate falling
                 }
             }
         }
