@@ -15,6 +15,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.cantyouc.angrybirds.bird.Black;
 import com.cantyouc.angrybirds.bird.YellowBird;
 import com.cantyouc.angrybirds.menu.FailMenu;
 import com.cantyouc.angrybirds.menu.VictoryMenu;
@@ -39,8 +40,8 @@ public class MainScreen implements Screen, Serializable {
     public final AngryBirds game;
     private Slingshot slingshot;
     private Bird[] birds;
-    private final int level;
-    private int currentBirdIndex = 0;
+    public int level;
+    public int currentBirdIndex = 0;
     private Obstacle[] obstacles;
     private pig[] pigs;
     private Ground ground;
@@ -206,7 +207,7 @@ public class MainScreen implements Screen, Serializable {
 
         int birdXPosition2 = 200;
         int birdYPosition2 = 150;
-        birds[1] = new Bird(birdXPosition2, birdYPosition2, birdHeight, birdWidth, ground, false);
+        birds[1] = new Black(birdXPosition2, birdYPosition2, birdHeight, birdWidth, ground, false);
         birds[1].setImage(new TextureRegion(new Texture(Gdx.files.internal("bird2.png"))));
 
         int birdXPosition3 = 100;
@@ -235,7 +236,7 @@ public class MainScreen implements Screen, Serializable {
 
         int birdXPosition2 = 200;
         int birdYPosition2 = 150;
-        birds[1] = new Bird(birdXPosition2, birdYPosition2, birdHeight, birdWidth, ground, false);
+        birds[1] = new Black(birdXPosition2, birdYPosition2, birdHeight, birdWidth, ground, false);
         birds[1].setImage(new TextureRegion(new Texture(Gdx.files.internal("bird2.png"))));
 
         int birdXPosition3 = 100;
@@ -286,7 +287,7 @@ public class MainScreen implements Screen, Serializable {
 
         int birdXPosition2 = 200;
         int birdYPosition2 = 150;
-        birds[1] = new Bird(birdXPosition2, birdYPosition2, birdHeight, birdWidth, ground, false);
+        birds[1] = new Black(birdXPosition2, birdYPosition2, birdHeight, birdWidth, ground, false);
         birds[1].setImage(new TextureRegion(new Texture(Gdx.files.internal("bird2.png"))));
 
         int birdXPosition3 = 100;
@@ -461,9 +462,13 @@ private boolean checkPigCollision(Bird bird, pig pig) {
         }
         else if (allBirdsExhausted && !allPigsDestroyed) {
             System.out.println("Transitioning to FailMenu...");
-            game.setScreen(new FailMenu(game));
+            game.setScreen(new FailMenu(game, level));
             dispose();
         }
+    }
+
+    public int getLevel() {
+        return level;
     }
 
     @Override
@@ -485,6 +490,43 @@ private boolean checkPigCollision(Bird bird, pig pig) {
                 bird.draw(game.batch);
                 if (bird == currentBird && birdLaunched) {
                     bird.move(deltaTime);
+                    if (bird instanceof Black) {
+                        Black blackBird = (Black) bird;
+                        boolean shouldExplode = false;
+                        // Check for obstacle collision
+                        for (Obstacle obstacle : obstacles) {
+                            if (obstacle.isHitByBird(bird)) {
+                                shouldExplode = true;
+                                break;
+                            }
+                        }
+                        for (pig p : pigs) {
+                            if (checkPigCollision(bird, p)) {
+                                shouldExplode = true;
+                                break;
+                            }
+                        }
+                        if (Math.abs(bird.getX() - 200) > 500f) {
+                            shouldExplode = true;
+                        }
+//                        float distanceTraveled = calculateDistanceTraveled(bird);
+//                        if (distanceTraveled > 500f) {  // Adjust threshold as needed
+//                            shouldExplode = true;
+//                        }
+                        if (shouldExplode && !blackBird.hasExploded()) {
+                            blackBird.explode(obstacles, pigs);
+                        }
+                        // Check for pig collision
+                        for (int i = 0; i < pigs.length; i++) {
+                            if (checkPigCollision(bird, pigs[i])) {
+                                if (bird instanceof Black) {
+                                    ((Black) bird).explode(obstacles, pigs);
+                                }
+                                destroyPig(i);
+                                break;
+                            }
+                        }
+                    }
 
                     // Check for collisions with obstacles
                     for (Obstacle obstacle : obstacles) {
@@ -565,6 +607,10 @@ private boolean checkPigCollision(Bird bird, pig pig) {
         stage.draw();
     }
 
+    private float calculateDistanceTraveled(Bird bird) {
+        return Math.abs(bird.getX() - 200);
+    }
+
     // Collision detection method
     private boolean checkCollision(Bird bird, Obstacle obstacle) {
         // Simple axis-aligned bounding box (AABB) collision detection
@@ -636,6 +682,22 @@ private boolean checkPigCollision(Bird bird, pig pig) {
     public void hide() {
     }
 
+    public int getCurrentBirdIndex() {
+        return currentBirdIndex;
+    }
+
+    public Slingshot getSlingshot() {
+        return slingshot;
+    }
+
+    public Obstacle[] getObstacles() {
+        return obstacles;
+    }
+
+    public boolean isBirdLaunched() {
+        return birdLaunched;
+    }
+
     @Override
     public void dispose() {
         for (Obstacle obstacle : obstacles) {
@@ -653,4 +715,5 @@ private boolean checkPigCollision(Bird bird, pig pig) {
         stage.dispose();
         background.dispose();
     }
+
 }

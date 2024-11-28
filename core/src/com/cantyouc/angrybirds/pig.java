@@ -81,6 +81,10 @@ public class pig {
         return height;
     }
 
+    public Ground getGround() {
+        return ground;
+    }
+
     public void markAsDead() {
         isDead = true; // Mark the pig as dead
     }
@@ -93,4 +97,5 @@ public class pig {
         if (isDead) return;
         texture.dispose(); // Clean up texture
     }
+
 }

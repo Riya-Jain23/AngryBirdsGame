@@ -22,9 +22,11 @@ public class FailMenu implements Screen {
     private final Texture background;
     private final Texture backButtonImage;
     private final Texture restartButtonImage;
+    private final int level;
 
-    public FailMenu(AngryBirds game) {
+    public FailMenu(AngryBirds game, int level) {
         this.game = game;
+        this.level = level;
         this.stage = new Stage(new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
         this.skin = new Skin(Gdx.files.internal("orangepeelui/uiskin.json"));
         this.background = new Texture("fail_background.png"); // Your fail background image
@@ -50,7 +52,7 @@ public class FailMenu implements Screen {
 
         restartButton.addListener(event -> {
             if (event.isHandled()) {
-                game.setScreen(new MainScreen(game, 1));
+                game.setScreen(new MainScreen(game, level));
                 dispose();
             }
             return false;

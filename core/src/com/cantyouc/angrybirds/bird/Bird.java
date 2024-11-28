@@ -10,9 +10,11 @@ import com.cantyouc.angrybirds.misc.Ground;
 import java.lang.Math;
 
 public class Bird {
-    private int x, y;
+    public int x;
+    public int y;
     private final boolean flipped;
-    private final int height, width;
+    public final int height;
+    public final int width;
     private final Rectangle hitbox;
     private final Ground ground;
     protected float xVelocity, yVelocity;

@@ -13,9 +13,10 @@ import com.cantyouc.angrybirds.misc.MainScreen;
 import com.cantyouc.angrybirds.misc.AngryBirds;
 
 public class PauseMenu extends Menu {
+    private int level;
+
     public PauseMenu(final AngryBirds game) {
         super(game);
-        Table table = new Table();
         table.setFillParent(true);
         stage.addActor(table);
 
@@ -26,7 +27,7 @@ public class PauseMenu extends Menu {
         resume.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                game.setScreen(new MainScreen(game, 1));
+                game.setScreen(new MainScreen(game, level));
                 dispose();
             }
         });

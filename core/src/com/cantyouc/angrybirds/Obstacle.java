@@ -14,7 +14,7 @@ public class Obstacle {
     private float width, height;
     private float xVelocity, yVelocity; // For pushing the obstacle
     private ArrayList<Piece> pieces;
-    private boolean isCrumbling = false;
+    public boolean isCrumbling = false;
 
     public Obstacle(float x, float y, String path) {
         this.x = x;
@@ -58,6 +58,18 @@ public class Obstacle {
     public float getY() { return y; }
     public float getWidth() { return width; }
     public float getHeight() { return height; }
+
+    public boolean isCrumbling() {
+        return isCrumbling;
+    }
+
+    public float getxVelocity() {
+        return xVelocity;
+    }
+
+    public float getyVelocity() {
+        return yVelocity;
+    }
 
     public boolean isHitByBird(Bird bird) {
         float birdX = bird.getX();
@@ -109,6 +121,7 @@ public class Obstacle {
     public void dispose() {
         texture.dispose();
     }
+
 
     private class Piece {
         private TextureRegion pieceTexture;

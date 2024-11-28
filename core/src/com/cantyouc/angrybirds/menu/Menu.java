@@ -14,12 +14,14 @@ public class Menu implements Screen {
     protected final Stage stage;
     protected Texture background;
     protected Skin skin;
+    protected Table table;
 
     public Menu(final AngryBirds game) {
         skin = new Skin(Gdx.files.internal("orangepeelui/uiskin.json"));
         this.game = game;
         background = new Texture("background.jpg");
         stage = new Stage(new ScreenViewport());
+        table = new Table();
         Gdx.input.setInputProcessor(stage);
     }
 
