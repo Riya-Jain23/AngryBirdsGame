@@ -261,18 +261,18 @@ public class MainScreen extends ScreenAdapter implements Screen, Serializable  {
             new GlassObstacle(1500, height / 2 - 400),
             new WoodenObstacle(1300, height / 2 - 320),
             new WoodenObstacle(1500, height / 2 - 320),
-            new WoodenObstacle(1500, height / 2 - 280),
+            new GlassObstacle(1500, height / 2 - 280),
             new WoodenObstacle(1350, height / 2 - 237),
             new WoodenObstacle(1300, height / 2 - 225),
-            new WoodenObstacle(1300, height / 2 - 145),
+            new GlassObstacle(1300, height / 2 - 145),
             new WoodenObstacle(1250, height / 2 - 60),
 
             new WoodenObstacle(1100, height / 2 - 400),
             new WoodenObstacle(1100, height / 2 - 320),
-            new WoodenObstacle(1100, height / 2 - 240),
+            new MetalObstacle(1100, height / 2 - 240),
             new WoodenObstacle(1100, height / 2 - 160),
             new WoodenObstacle(1100, height / 2 - 80),
-            new WoodenObstacle(1100, height / 2-80)
+            new MetalObstacle(1100, height / 2-80)
         };
     }
 
@@ -316,18 +316,18 @@ public class MainScreen extends ScreenAdapter implements Screen, Serializable  {
             new WoodenObstacle(1300, height / 2 - 400),
             new MetalObstacle(1500, height / 2 - 400),
             new WoodenObstacle(1300, height / 2 - 320),
-            new WoodenObstacle(1500, height / 2 - 320),
+            new MetalObstacle(1500, height / 2 - 320),
             new WoodenObstacle(1500, height / 2 - 280),
             new WoodenObstacle(1350, height / 2 - 237),
             new WoodenObstacle(1300, height / 2 - 225),
-            new WoodenObstacle(1300, height / 2 - 145),
+            new MetalObstacle(1300, height / 2 - 145),
             new WoodenObstacle(1250, height / 2 - 60),
 
             new WoodenObstacle(1100, height / 2 - 400),
-            new WoodenObstacle(1100, height / 2 - 320),
+            new GlassObstacle(1100, height / 2 - 320),
             new WoodenObstacle(1100, height / 2 - 240),
             new WoodenObstacle(1100, height / 2 - 160),
-            new WoodenObstacle(1100, height / 2 - 80),
+            new GlassObstacle(1100, height / 2 - 80),
             new WoodenObstacle(1100, height / 2),
         };
     }
@@ -500,7 +500,9 @@ private boolean checkPigCollision(Bird bird, pig pig) {
                             float pushX = (bird.getXVelocity() * 15f);
                             float pushY = (bird.getYVelocity() * 15f);
                             obstacle.push(pushX, pushY);
+                            obstacle.update(deltaTime);
                             obstacle.crumble();
+                            obstacle.onCollision(bird);
                         }
                     }
                     for (int i = 0; i < pigs.length; i++) {

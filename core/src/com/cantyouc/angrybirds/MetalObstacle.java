@@ -10,29 +10,55 @@ public class MetalObstacle extends BaseObstacle {
     private java.util.List<Piece> pieces = new java.util.ArrayList<>();
     private static final int MAX_HITS = 3; // Set max hits to 3 for crumbling
     private int hitCount = 0; // Track the number of hits
+    private float rotationAngle = 0; // Current rotation angle for bending
+    private float rotationThreshold = 45f; // Maximum angle before falling
+    private boolean isFalling = false; // Whether the obstacle is falling
+    private float fallVelocity = 0; // Vertical velocity for falling
+    private final float recoveryRate = 5f; // Rate of recovery to upright position
+    private final float gravity = 500f; // Gravity to simulate falling
+    private final float friction = 50f; // Friction to slow horizontal movement
+    private float pivotX; // Pivot point for rotation
+    private float pivotY;
+
 
     public MetalObstacle(float x, float y) {
         super(x, y, "metal_obstacle.png", 0.9f, 2.0f);
+        this.pivotX = x + width / 2; // Center of the obstacle
+        this.pivotY = y + height; // Top edge of the obstacle
     }
 
     @Override
     public void update(float deltaTime) {
-        if (isCrumbling) {
-            for (Piece piece : pieces) {
-                piece.update(deltaTime);
+        if (isFalling) {
+            // Update position and velocity for falling motion
+            fallVelocity += gravity * deltaTime; // Accelerate downwards
+            y -= fallVelocity * deltaTime; // Move down
+            x += xVelocity * deltaTime; // Move horizontally
+            xVelocity = Math.max(xVelocity - friction * deltaTime, 0); // Apply friction to slow horizontal motion
+
+            // Stop falling once the obstacle is out of bounds
+            if (y + height < 0) {
+                isCrumbling = true; // Mark as "destroyed" for removal
+            }
+        } else {
+            // Recovery logic: gradually return to upright position
+            if (rotationAngle > 0) {
+                rotationAngle -= 7 * deltaTime; // Gradual recovery
+                if (rotationAngle < 0) rotationAngle = 0; // Avoid overcorrection
             }
         }
+
+        // Update the pivot point for rotation
+        pivotX = x + width / 2;
+        pivotY = y + height;
     }
 
     @Override
     public void draw(SpriteBatch batch) {
-        if (!isCrumbling) {
-            batch.draw(texture, x, y);
-        } else {
-            for (Piece piece : pieces) {
-                piece.draw(batch);
-            }
-        }
+        batch.draw(texture, x, y, pivotX - x, pivotY - y, width, height,
+            1, 1, rotationAngle,
+            0, 0, (int) width, (int) height,
+            false, false);
     }
 
     @Override
@@ -43,37 +69,29 @@ public class MetalObstacle extends BaseObstacle {
                 bird.getYVelocity() * bird.getYVelocity()
         );
 
-        // Only increase hit count if the impact is strong enough
         if (impactForce > 15) {
-            hitCount++; // Increment the hit count when a collision occurs
-
-            // Crumble after the third hit only
-            if (hitCount == MAX_HITS && !isCrumbling) {
-                crumble(); // Trigger crumbling on the third hit
+            bend(impactForce / 10); // Bend based on impact strength
+            xVelocity = bird.getXVelocity() * 0.5f; // Set horizontal motion based on bird's velocity
+            if (rotationAngle >= rotationThreshold) {
+                isFalling = true; // Trigger falling if threshold is exceeded
+                fallVelocity = 0; // Reset fall velocity for realistic falling
             }
         }
     }
 
     @Override
-    public void crumble() {
-        isCrumbling = true;
-        pieces.clear();
-
-        int numPieces = 10; // Number of pieces to break the obstacle into
-        for (int i = 0; i < numPieces; i++) {
-            float randomX = MathUtils.random(0, width - 30);
-            float randomY = MathUtils.random(0, height - 30);
-            float randomWidth = MathUtils.random(20, 50);
-            float randomHeight = MathUtils.random(20, 50);
-
-            TextureRegion region = new TextureRegion(texture,
-                (int) randomX, (int) randomY, (int) randomWidth, (int) randomHeight);
-
-            Piece piece = new Piece(region, x + randomX, y + randomY,
-                randomWidth, randomHeight,
-                MathUtils.random(-20, 20), MathUtils.random(-20, 20));
-            pieces.add(piece);
+    public void bend(float angle) {
+        rotationAngle += 4 * angle;
+        if (rotationAngle >= rotationThreshold) {
+            // Trigger falling once the angle exceeds the threshold
+            isFalling = true;
+            fallVelocity = 4; // Start falling
         }
+    }
+
+    @Override
+    public void crumble() {
+
     }
 
     public int getHitCount() {

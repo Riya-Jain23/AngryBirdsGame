@@ -1,5 +1,6 @@
 package com.cantyouc.angrybirds;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
@@ -45,7 +46,7 @@ public class GlassObstacle extends BaseObstacle {
         isCrumbling = true;
         pieces.clear();
 
-        int numPieces = 15;
+        int numPieces = 45;
         for (int i = 0; i < numPieces; i++) {
             float randomX = MathUtils.random(0, width - 20);
             float randomY = MathUtils.random(0, height - 20);
@@ -60,5 +61,6 @@ public class GlassObstacle extends BaseObstacle {
                 MathUtils.random(-30, 30), MathUtils.random(-30, 30));
             pieces.add(piece);
         }
+        Gdx.audio.newSound(Gdx.files.internal("glassshatter.mp3")).play();
     }
 }

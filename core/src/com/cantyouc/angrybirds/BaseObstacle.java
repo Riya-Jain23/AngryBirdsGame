@@ -10,7 +10,8 @@ import java.util.ArrayList;
 public abstract class BaseObstacle {
     protected float x, y;
     private ArrayList<Piece> pieces;
-    private float xVelocity, yVelocity;
+    public float xVelocity;
+    private float yVelocity;
     protected float width, height;
     protected Texture texture;
     protected float hardness; // How resistant the obstacle is to damage
@@ -57,7 +58,7 @@ public abstract class BaseObstacle {
         pieces.clear();
         isCrumbling = true;
 
-        int numPieces = 20;
+        int numPieces = 5;
 
         for (int i = 0; i < numPieces; i++) {
             float randomX = MathUtils.random(0, width - 20);
@@ -97,6 +98,11 @@ public abstract class BaseObstacle {
             texture.dispose();
         }
     }
+
+    public void bend(float angle){
+
+    }
+
 
     public boolean isCrumbling() {
         return isCrumbling;
