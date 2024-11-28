@@ -461,8 +461,7 @@ private boolean checkPigCollision(Bird bird, pig pig) {
             dispose();
         }
         else if (allBirdsExhausted && !allPigsDestroyed) {
-            System.out.println("Transitioning to FailMenu...");
-            game.setScreen(new FailMenu(game));
+            game.setScreen(new FailMenu(game, level));
             dispose();
         }
     }
