@@ -4,7 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.cantyouc.angrybirds.Obstacle;
+import com.cantyouc.angrybirds.BaseObstacle;
 import com.cantyouc.angrybirds.Slingshot;
 import com.cantyouc.angrybirds.menu.GameState;
 import com.cantyouc.angrybirds.menu.MainMenu;
@@ -21,7 +21,7 @@ public class AngryBirds extends Game {
     private Music backgroundMusic;
     private MainScreen currentBirdIndex;
     private Slingshot slingshot;
-    private Obstacle[] obstacles;
+    private BaseObstacle[] obstacles;
     private boolean birdLaunched;
     private Bird[] birds;
     private pig[] pigs;
@@ -82,7 +82,7 @@ public class AngryBirds extends Game {
         return slingshot;
     }
 
-    public Obstacle[] getObstacles() {
+    public BaseObstacle[] getObstacles() {
         return obstacles;
     }
 
@@ -98,7 +98,7 @@ public class AngryBirds extends Game {
         this.setObstacles(newGame.getObstacles());
     }
 
-    private void setObstacles(Obstacle[] obstacles) {
+    private void setObstacles(BaseObstacle[] obstacles) {
         this.obstacles = obstacles;
     }
 

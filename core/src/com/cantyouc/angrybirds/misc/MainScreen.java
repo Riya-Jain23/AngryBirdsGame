@@ -15,13 +15,11 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.cantyouc.angrybirds.*;
 import com.cantyouc.angrybirds.bird.Black;
 import com.cantyouc.angrybirds.bird.YellowBird;
 import com.cantyouc.angrybirds.menu.FailMenu;
 import com.cantyouc.angrybirds.menu.VictoryMenu;
-import com.cantyouc.angrybirds.pig;
-import com.cantyouc.angrybirds.Obstacle;
-import com.cantyouc.angrybirds.Slingshot;
 import com.cantyouc.angrybirds.bird.Bird;
 import com.cantyouc.angrybirds.exception.BirdOutOfScreenException;
 import com.cantyouc.angrybirds.menu.PauseMenu;
@@ -42,7 +40,7 @@ public class MainScreen extends ScreenAdapter implements Screen, Serializable  {
     private Bird[] birds;
     private final int level;
     private int currentBirdIndex = 0;
-    private Obstacle[] obstacles;
+    private BaseObstacle[] obstacles;
     private pig[] pigs;
     private Ground ground;
     private boolean isDragging = false;
@@ -126,7 +124,6 @@ public class MainScreen extends ScreenAdapter implements Screen, Serializable  {
                     dragEndX = touch.x;
                     dragEndY = touch.y;
 
-                    // Calculate drag distance and limit it
                     float dragDistance = Vector2.dst(dragStartX, dragStartY, dragEndX, dragEndY);
                     if (dragDistance > MAX_DRAG_DISTANCE) {
                         float angle = (float) Math.atan2(dragEndY - dragStartY, dragEndX - dragStartX);
@@ -150,15 +147,12 @@ public class MainScreen extends ScreenAdapter implements Screen, Serializable  {
                     Vector2 touch = new Vector2(screenX, screenY);
                     viewport.unproject(touch);
 
-                    // Calculate velocity based on drag
                     float vx = (dragStartX - dragEndX) * 0.25f; // Opposite to drag
                     float vy = (dragStartY - dragEndY) * 0.25f;
 
-                    // Set bird's velocity
                     currentBird.setXVelocity(vx);
                     currentBird.setYVelocity(vy);
 
-                    // Predict trajectory (e.g., maxTime = 3 seconds, deltaTime = 0.05s)
                     ArrayList<Object> trajectory = predictTrajectory(
                         currentBird.getX(), currentBird.getY(),
                         vx, vy,
@@ -174,12 +168,12 @@ public class MainScreen extends ScreenAdapter implements Screen, Serializable  {
 
             @Override
             public boolean keyDown(int keycode) {
-                if (keycode == Input.Keys.SPACE) {  // Check if the space bar is pressed
+                if (keycode == Input.Keys.SPACE) {
                     if (currentBird instanceof Black && birdLaunched) {
                         Black blackBird = (Black) currentBird;
                         if (!blackBird.hasExploded()) {
                             blackBird.setSpacebarPressed(true);
-                            blackBird.triggerExplosion();  // Set the flag to trigger explosion
+                            blackBird.triggerExplosion();
                             return true;
                         }
                     }
@@ -205,8 +199,8 @@ public class MainScreen extends ScreenAdapter implements Screen, Serializable  {
             }
             else{
                 currentBird.isExhausted();
-                currentBirdIndex++; // Move to the next bird
-                setupNextBird(); // Call recursively to set up the next bird
+                currentBirdIndex++;
+                setupNextBird();
             }
         }
 
@@ -232,12 +226,12 @@ public class MainScreen extends ScreenAdapter implements Screen, Serializable  {
         birds[2].setImage(new TextureRegion(new Texture(Gdx.files.internal("bird3.png"))));
     }
     private void initializeObstacles() {
-        obstacles = new Obstacle[]{
-            new Obstacle(1500, height / 2 - 400, "obstacle1.png"),
-            new Obstacle(1500, height / 2 - 320, "obstacle1.png"),
-            new Obstacle(1500, height / 2 - 240, "obstacle1.png"),
-            new Obstacle(1650, height / 2 - 400, "obstacle1.png"),
-            new Obstacle(1650, height / 2 - 320, "obstacle1.png")
+        obstacles = new BaseObstacle[]{
+            new WoodenObstacle(1500, height / 2 - 400),
+            new WoodenObstacle(1500, height / 2 - 320),
+            new WoodenObstacle(1500, height / 2 - 240),
+            new WoodenObstacle(1650, height / 2 - 400),
+            new WoodenObstacle(1650, height / 2 - 320)
         };
     }
     private void initializeBirdsLevel2() {
@@ -262,24 +256,23 @@ public class MainScreen extends ScreenAdapter implements Screen, Serializable  {
     }
 
     private void initializeObstaclesLevel2() {
-        obstacles = new Obstacle[]{
-            new Obstacle(1300, height / 2 - 400, "obstacle1.png"),
-            new Obstacle(1500, height / 2 - 400, "obstacle1.png"),
-            new Obstacle(1300, height / 2 - 320, "obstacle1.png"),
-            new Obstacle(1500, height / 2 - 320, "line.png"),
-            new Obstacle(1500, height / 2 - 280, "line.png"),
-            new Obstacle(1350, height / 2 - 237, "line2.png"),
-            new Obstacle(1300, height / 2 - 225, "obstacle1.png"),
-            new Obstacle(1300, height / 2 - 145, "obstacle1.png"),
-            new Obstacle(1250, height / 2 - 60, "line2.png"),
+        obstacles = new BaseObstacle[]{
+            new WoodenObstacle(1300, height / 2 - 400),
+            new GlassObstacle(1500, height / 2 - 400),
+            new WoodenObstacle(1300, height / 2 - 320),
+            new WoodenObstacle(1500, height / 2 - 320),
+            new WoodenObstacle(1500, height / 2 - 280),
+            new WoodenObstacle(1350, height / 2 - 237),
+            new WoodenObstacle(1300, height / 2 - 225),
+            new WoodenObstacle(1300, height / 2 - 145),
+            new WoodenObstacle(1250, height / 2 - 60),
 
-            new Obstacle(1100, height / 2 - 400, "obstacle1.png"),
-            new Obstacle(1100, height / 2 - 320, "obstacle1.png"),
-            new Obstacle(1100, height / 2 - 240, "obstacle1.png"),
-            new Obstacle(1100, height / 2 - 160, "obstacle1.png"),
-            new Obstacle(1100, height / 2 - 80, "obstacle1.png"),
-            new Obstacle(1100, height / 2, "obstacle1.png"),
-
+            new WoodenObstacle(1100, height / 2 - 400),
+            new WoodenObstacle(1100, height / 2 - 320),
+            new WoodenObstacle(1100, height / 2 - 240),
+            new WoodenObstacle(1100, height / 2 - 160),
+            new WoodenObstacle(1100, height / 2 - 80),
+            new WoodenObstacle(1100, height / 2-80)
         };
     }
 
@@ -318,24 +311,24 @@ public class MainScreen extends ScreenAdapter implements Screen, Serializable  {
     }
 
     private void initializeObstaclesLevel3() {
-        obstacles = new Obstacle[]{
+        obstacles = new BaseObstacle[]{
             // More complex obstacle arrangement
-            new Obstacle(1300, height / 2 - 400, "obstacle1.png"),
-            new Obstacle(1500, height / 2 - 400, "obstacle1.png"),
-            new Obstacle(1300, height / 2 - 320, "obstacle1.png"),
-            new Obstacle(1500, height / 2 - 320, "line.png"),
-            new Obstacle(1500, height / 2 - 280, "line.png"),
-            new Obstacle(1350, height / 2 - 237, "line2.png"),
-            new Obstacle(1300, height / 2 - 225, "obstacle1.png"),
-            new Obstacle(1300, height / 2 - 145, "obstacle1.png"),
-            new Obstacle(1250, height / 2 - 60, "line2.png"),
+            new WoodenObstacle(1300, height / 2 - 400),
+            new MetalObstacle(1500, height / 2 - 400),
+            new WoodenObstacle(1300, height / 2 - 320),
+            new WoodenObstacle(1500, height / 2 - 320),
+            new WoodenObstacle(1500, height / 2 - 280),
+            new WoodenObstacle(1350, height / 2 - 237),
+            new WoodenObstacle(1300, height / 2 - 225),
+            new WoodenObstacle(1300, height / 2 - 145),
+            new WoodenObstacle(1250, height / 2 - 60),
 
-            new Obstacle(1100, height / 2 - 400, "obstacle1.png"),
-            new Obstacle(1100, height / 2 - 320, "obstacle1.png"),
-            new Obstacle(1100, height / 2 - 240, "obstacle1.png"),
-            new Obstacle(1100, height / 2 - 160, "obstacle1.png"),
-            new Obstacle(1100, height / 2 - 80, "obstacle1.png"),
-            new Obstacle(1100, height / 2, "obstacle1.png"),
+            new WoodenObstacle(1100, height / 2 - 400),
+            new WoodenObstacle(1100, height / 2 - 320),
+            new WoodenObstacle(1100, height / 2 - 240),
+            new WoodenObstacle(1100, height / 2 - 160),
+            new WoodenObstacle(1100, height / 2 - 80),
+            new WoodenObstacle(1100, height / 2),
         };
     }
 
@@ -422,7 +415,6 @@ public class MainScreen extends ScreenAdapter implements Screen, Serializable  {
 private boolean checkPigCollision(Bird bird, pig pig) {
     if (pig == null) return false;
 
-    // Simple axis-aligned bounding box (AABB) collision detection
     return bird.getX() < pig.getX() + pig.getWidth() &&
         bird.getX() + bird.getWidth() > pig.getX() &&
         bird.getY() < pig.getY() + pig.getHeight() &&
@@ -432,14 +424,11 @@ private boolean checkPigCollision(Bird bird, pig pig) {
     public void destroyPig(int pigIndex) {
         try {
             if (pigIndex >= 0 && pigIndex < pigs.length && pigs[pigIndex] != null) {
-                // Dispose of the pig's resources
                 pigs[pigIndex].dispose();
-                // Remove the pig from the array
                 pigs[pigIndex].markAsDead();
                 checkLevelCompletion();
             }
         } catch (Exception e) {
-            // Log the error or handle it appropriately
             System.err.println("Error destroying pig: " + e.getMessage());
             e.printStackTrace();
         }
@@ -465,14 +454,10 @@ private boolean checkPigCollision(Bird bird, pig pig) {
                 allBirdsExhausted = true;
             }
         }
-//        allBirdsExhausted = true;
-
-
         System.out.println("All pigs destroyed: " + allPigsDestroyed);
         System.out.println("All birds exhausted: " + allBirdsExhausted);
 
         if (allPigsDestroyed) {
-            // Transition to victory screen
             game.setScreen(new VictoryMenu(game));
             dispose();
         }
@@ -495,7 +480,6 @@ private boolean checkPigCollision(Bird bird, pig pig) {
 
         slingshot.draw(game.batch);
 
-        // Move and draw birds
         for (Bird bird : birds) {
             try {
                 bird.draw(game.batch);
@@ -506,20 +490,15 @@ private boolean checkPigCollision(Bird bird, pig pig) {
                         blackBird.renderExplosion(game.batch);
 
 
-                        // Check if the explosion flag is set and the bird hasn't exploded yet
                         if (blackBird.shouldTriggerExplosion() && !blackBird.hasExploded()) {
                             blackBird.explode(obstacles, pigs);
-                            blackBird.resetExplosionFlag();  // Reset the flag after explosion
+                            blackBird.resetExplosionFlag();
                         }
                     }
-
-
-                    // Check for collisions with obstacles
-                    for (Obstacle obstacle : obstacles) {
+                    for (BaseObstacle obstacle : obstacles) {
                         if (obstacle.isHitByBird(bird)) {
-                            // Apply a velocity to the obstacle when it is hit by the bird
-                            float pushX = (bird.getXVelocity() * 15f); // Adjust force multiplier for more impact
-                            float pushY = (bird.getYVelocity() * 15f); // Adjust force multiplier for more impact
+                            float pushX = (bird.getXVelocity() * 15f);
+                            float pushY = (bird.getYVelocity() * 15f);
                             obstacle.push(pushX, pushY);
                             obstacle.crumble();
                         }
@@ -549,11 +528,10 @@ private boolean checkPigCollision(Bird bird, pig pig) {
             }
         }
 
-        // Draw obstacles
-        for (Obstacle obstacle : obstacles) {
-            obstacle.update(deltaTime); // Update obstacle's position
+        for (BaseObstacle obstacle : obstacles) {
+            obstacle.update(deltaTime);
             obstacle.draw(game.batch);
-            obstacle.checkPigContact(pigs); // Check if pigs are affected by crumbled obstacle
+            obstacle.checkPigContact(pigs);
         }
 
         for (pig pig : pigs) {
@@ -571,13 +549,11 @@ private boolean checkPigCollision(Bird bird, pig pig) {
         ground.draw(renderer);
         renderer.end();
 
-        // Draw trajectory prediction (only while dragging and before bird launch)
         if (isDragging && currentBird != null && !birdLaunched) {
             Gdx.gl.glEnable(GL20.GL_BLEND);
             renderer.begin(ShapeRenderer.ShapeType.Line);
-            renderer.setColor(1, 0, 0, 1); // Red color for trajectory
+            renderer.setColor(1, 0, 0, 1);
 
-            // Predict trajectory based on current drag
             ArrayList<Object> trajectory = predictTrajectory(
                 currentBird.getX(), currentBird.getY(),
                 (dragStartX - dragEndX) * 0.25f,
@@ -597,9 +573,7 @@ private boolean checkPigCollision(Bird bird, pig pig) {
         return Math.abs(bird.getX() - 200);
     }
 
-    // Collision detection method
-    private boolean checkCollision(Bird bird, Obstacle obstacle) {
-        // Simple axis-aligned bounding box (AABB) collision detection
+    private boolean checkCollision(Bird bird, BaseObstacle obstacle) {
         return bird.getX() < obstacle.getX() + obstacle.getWidth() &&
             bird.getX() + bird.getWidth() > obstacle.getX() &&
             bird.getY() < obstacle.getY() + obstacle.getHeight() &&
@@ -612,25 +586,19 @@ private boolean checkPigCollision(Bird bird, pig pig) {
     public ArrayList<Object> predictTrajectory(float initialX, float initialY, float initialXVelocity, float initialYVelocity, float deltaTime, float maxTime) {
         ArrayList<Object> trajectoryPoints = new ArrayList<>();
 
-        // Initialize the position and velocity
         float x = initialX;
         float y = initialY;
         float xVelocity = initialXVelocity;
         float yVelocity = initialYVelocity;
 
-        // Simulate the trajectory over time
         for (float t = 0; t <= maxTime; t += deltaTime) {
-            // Add the current position to the trajectory points
             trajectoryPoints.add(new Vector2(x, y));
 
-            // Update the position based on velocity and deltaTime
             x += xVelocity * deltaTime;
             y += yVelocity * deltaTime;
 
-            // Update the vertical velocity based on gravity
             yVelocity -= Ground.GRAVITY * deltaTime;
 
-            // If the bird hits the ground (y <= ground height), stop the prediction
             if (y <= ground.getHeight()) {
                 y = ground.getHeight();
                 break;
@@ -639,9 +607,6 @@ private boolean checkPigCollision(Bird bird, pig pig) {
 
         return trajectoryPoints;
     }
-
-
-
 
     @Override
     public void resize(int width, int height) {
@@ -670,7 +635,7 @@ private boolean checkPigCollision(Bird bird, pig pig) {
 
     @Override
     public void dispose() {
-        for (Obstacle obstacle : obstacles) {
+        for (BaseObstacle obstacle : obstacles) {
             obstacle.dispose();
         }
         for (pig pig : pigs) {

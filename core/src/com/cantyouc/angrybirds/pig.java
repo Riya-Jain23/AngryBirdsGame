@@ -33,13 +33,11 @@ public class pig {
     }
 
     public void update(float deltaTime) {
-        // Apply gravity to the pig if it's falling
         if (isDead) return;
 
-        // Ground collision check (the bird should stop when it hits the ground)
         if (y <= ground.getHeight()) {
-            y = (int) ground.getHeight();  // Snap to ground level
-            velocityY = 0;  // Stop vertical motion
+            y = (int) ground.getHeight();
+            velocityY = 0;
             markAsDead();
             dispose();
         }
@@ -50,8 +48,7 @@ public class pig {
 
     }
 
-    // Check if the pig is in contact with the obstacle
-    public boolean isInContactWithObstacle(Obstacle obstacle) {
+    public boolean isInContactWithObstacle(BaseObstacle obstacle) {
         if (isDead) return false;
         return this.x < obstacle.getX() + obstacle.getWidth() &&
             this.x + this.width > obstacle.getX() &&
@@ -86,8 +83,10 @@ public class pig {
     }
 
     public void markAsDead() {
-        System.out.println("Pig marked as dead at: " + getX() + ", " + getY());
-        isDead = true; // Mark the pig as dead
+        if (!isDead) {
+            System.out.println("Pig marked as dead at: " + getX() + ", " + getY());
+            isDead = true;  // Mark the pig as dead
+        }
     }
 
     public boolean isDead() {

@@ -1,11 +1,12 @@
 package com.cantyouc.angrybirds.menu;
 
+import com.cantyouc.angrybirds.WoodenObstacle;
 import com.cantyouc.angrybirds.bird.Bird;
 import com.cantyouc.angrybirds.misc.AngryBirds;
 import com.cantyouc.angrybirds.misc.Ground;
 import com.cantyouc.angrybirds.misc.MainScreen;
 import com.cantyouc.angrybirds.pig;
-import com.cantyouc.angrybirds.Obstacle;
+import com.cantyouc.angrybirds.BaseObstacle;
 import com.cantyouc.angrybirds.Slingshot;
 
 import java.io.Serializable;
@@ -41,7 +42,7 @@ public class GameState implements Serializable {
 
         // Save obstacles' states
         this.obstacles = new ArrayList<>();
-        for (Obstacle obstacle : game.getObstacles()) {
+        for (BaseObstacle obstacle : game.getObstacles()) {
             obstacles.add(new SerializedObstacle(obstacle));
         }
 
@@ -76,12 +77,12 @@ public class GameState implements Serializable {
     }
 
     // Reconstruct obstacles from their saved states
-    public Obstacle[] getObstacles() {
-        List<Obstacle> obstacleList = new ArrayList<>();
+    public BaseObstacle[] getObstacles() {
+        List<BaseObstacle> obstacleList = new ArrayList<>();
         for (SerializedObstacle state : obstacles) {
-            obstacleList.add(new Obstacle(state.x, state.y, state.path));
+            obstacleList.add(new WoodenObstacle(state.x, state.y));
         }
-        return obstacleList.toArray(new Obstacle[0]);
+        return obstacleList.toArray(new BaseObstacle[0]);
     }
 
     public Slingshot getSlingshot() {
@@ -97,8 +98,8 @@ public class GameState implements Serializable {
         return birdLaunched;
     }
 
-    public List<Obstacle> recreateObstacles() {
-        List<Obstacle> recreatedObstacles = new ArrayList<>();
+    public List<BaseObstacle> recreateObstacles() {
+        List<BaseObstacle> recreatedObstacles = new ArrayList<>();
         for (SerializedObstacle serializedObstacle : obstacles) {
             recreatedObstacles.add(serializedObstacle.toObstacle());
         }
@@ -139,7 +140,7 @@ public class GameState implements Serializable {
         private final boolean isCrumbling;
         public String path;
 
-        public SerializedObstacle(Obstacle obstacle) {
+        public SerializedObstacle(BaseObstacle obstacle) {
             this.x = obstacle.getX();
             this.y = obstacle.getY();
             this.width = obstacle.getWidth();
@@ -149,8 +150,8 @@ public class GameState implements Serializable {
             this.isCrumbling = obstacle.isCrumbling(); // Add logic if needed to handle crumbling state
         }
 
-        public Obstacle toObstacle() {
-            Obstacle obstacle = new Obstacle(x, y, "obstacle1.png");
+        public BaseObstacle toObstacle() {
+            BaseObstacle obstacle = new WoodenObstacle(x, y);
             obstacle.push(xVelocity, yVelocity); // Restore movement state if necessary
             return obstacle;
         }

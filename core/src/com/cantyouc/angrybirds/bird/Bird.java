@@ -68,40 +68,32 @@ public class Bird {
         this.exhausted = exhausted;
     }
 
-    // Launch method to set the initial velocity based on angle and power
     public void launch(float angle, float power) {
         float angleRad = (float) Math.toRadians(angle);
         xVelocity = power * (float) Math.cos(angleRad);
         yVelocity = power * (float) Math.sin(angleRad);
     }
     public void move(float deltaTime) throws BirdOutOfScreenException {
-        // Update position using deltaTime and velocities
         if (x + xVelocity > 1 && x + xVelocity < ground.getWidth() - width - 1) {
             x += xVelocity;}
-        x += xVelocity * deltaTime;  // Apply horizontal velocity
+        x += xVelocity * deltaTime;
         if (y + yVelocity > 1 && y + yVelocity < ground.getWidth() - width - 1) {
             y += yVelocity;}
-        yVelocity -= Ground.GRAVITY * deltaTime;  // Apply gravity to vertical velocity
-        y += yVelocity * deltaTime;  // Apply vertical velocity
+        yVelocity -= Ground.GRAVITY * deltaTime;
+        y += yVelocity * deltaTime;
 
-        // Ground collision check (the bird should stop when it hits the ground)
         if (y <= ground.getHeight()) {
             y = (int) ground.getHeight();  // Snap to ground level
-            yVelocity = 0;  // Stop vertical motion
-            xVelocity = 0;  // Stop horizontal motion
+            yVelocity = 0;
+            xVelocity = 0;
         }
 
-        // Check if the bird is out of bounds
         if (x < 0 || x > ground.getWidth() || y > ground.getHeight() + 600) {
             throw new BirdOutOfScreenException("Bird is out of screen bounds.");
         }
-
-        // Update hitbox position (to maintain accurate collision detection)
+        setExhausted(true);
         hitbox.setPosition(x, y);
     }
-
-
-
 
     public void setXVelocity(float xVelocity) {
         this.xVelocity = xVelocity;
@@ -110,7 +102,6 @@ public class Bird {
     public float getAngle() {
         return (float) Math.toDegrees(Math.atan2(yVelocity, xVelocity));
     }
-
 
     public Rectangle getHitbox() {
         return hitbox;

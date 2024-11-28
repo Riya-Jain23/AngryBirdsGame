@@ -15,11 +15,8 @@ public class YellowBird extends Bird {
 
     @Override
     public void move(float deltaTime) throws BirdOutOfScreenException {
-        // Apply speed multiplier to the velocity
         xVelocity *= SPEED_MULTIPLIER;
         yVelocity *= SPEED_MULTIPLIER;
-
-        // Now call the move method of the base class (Bird)
         super.move(deltaTime);
     }
 
