@@ -12,7 +12,7 @@ import com.cantyouc.angrybirds.exception.BirdOutOfScreenException;
 
 public class Black extends Bird {
     private boolean hasExploded = false;
-    private float explosionRadius = 400f;
+    private float explosionRadius = 250f;
     private float explosionPower = 500f;
     private ParticleEffect smokeEffect;
     private boolean triggerExplosion = false;
