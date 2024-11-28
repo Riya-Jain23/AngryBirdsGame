@@ -86,6 +86,7 @@ public class pig {
     }
 
     public void markAsDead() {
+        System.out.println("Pig marked as dead at: " + getX() + ", " + getY());
         isDead = true; // Mark the pig as dead
     }
 

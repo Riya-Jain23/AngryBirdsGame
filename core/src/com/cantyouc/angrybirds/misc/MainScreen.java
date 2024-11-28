@@ -40,8 +40,8 @@ public class MainScreen implements Screen, Serializable {
     public final AngryBirds game;
     private Slingshot slingshot;
     private Bird[] birds;
-    public int level;
-    public int currentBirdIndex = 0;
+    private final int level;
+    private int currentBirdIndex = 0;
     private Obstacle[] obstacles;
     private pig[] pigs;
     private Ground ground;
@@ -462,13 +462,9 @@ private boolean checkPigCollision(Bird bird, pig pig) {
         }
         else if (allBirdsExhausted && !allPigsDestroyed) {
             System.out.println("Transitioning to FailMenu...");
-            game.setScreen(new FailMenu(game, level));
+            game.setScreen(new FailMenu(game));
             dispose();
         }
-    }
-
-    public int getLevel() {
-        return level;
     }
 
     @Override
@@ -509,6 +505,7 @@ private boolean checkPigCollision(Bird bird, pig pig) {
                         if (Math.abs(bird.getX() - 200) > 500f) {
                             shouldExplode = true;
                         }
+
 //                        float distanceTraveled = calculateDistanceTraveled(bird);
 //                        if (distanceTraveled > 500f) {  // Adjust threshold as needed
 //                            shouldExplode = true;
@@ -680,22 +677,6 @@ private boolean checkPigCollision(Bird bird, pig pig) {
 
     @Override
     public void hide() {
-    }
-
-    public int getCurrentBirdIndex() {
-        return currentBirdIndex;
-    }
-
-    public Slingshot getSlingshot() {
-        return slingshot;
-    }
-
-    public Obstacle[] getObstacles() {
-        return obstacles;
-    }
-
-    public boolean isBirdLaunched() {
-        return birdLaunched;
     }
 
     @Override
