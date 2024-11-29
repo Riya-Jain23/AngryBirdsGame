@@ -14,6 +14,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
+import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.cantyouc.angrybirds.*;
@@ -435,7 +436,6 @@ private boolean checkPigCollision(Bird bird, pig pig) {
         for (pig pig : pigs) {
             if (pig != null && !pig.isDead()) {
                 allPigsDestroyed = false;
-                System.out.println("Pig is alive at position: " + pig.getX() + ", " + pig.getY());
                 break;
             }
         }
@@ -443,23 +443,25 @@ private boolean checkPigCollision(Bird bird, pig pig) {
         for (Bird bird : birds) {
             if (!bird.isExhausted()) {
                 allBirdsExhausted = false;
-                System.out.println("Bird is not exhausted. Remaining birds: " + bird.getX() + ", " + bird.getY());
                 break;
             }
             else {
                 allBirdsExhausted = true;
             }
         }
-        System.out.println("All pigs destroyed: " + allPigsDestroyed);
-        System.out.println("All birds exhausted: " + allBirdsExhausted);
+
 
         if (allPigsDestroyed) {
-            game.setScreen(new VictoryMenu(game));
-            dispose();
+            Timer.schedule(new Timer.Task() {
+                @Override
+                public void run() {
+                    game.setScreen(new VictoryMenu(game));
+                }
+            }, 1f);
         }
         else if (allBirdsExhausted && !allPigsDestroyed) {
             game.setScreen(new FailMenu(game, level));
-            dispose();
+//            dispose();
         }
     }
 
