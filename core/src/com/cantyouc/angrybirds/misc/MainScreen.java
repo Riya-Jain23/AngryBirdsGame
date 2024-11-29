@@ -469,7 +469,7 @@ private boolean checkPigCollision(Bird bird, pig pig) {
         float yProjectile = startY;
 
         float gravity = 0.02f;
-        float velocityMultiplier = 0.4f;
+        float velocityMultiplier = 0.38f;
         xVelocity *= velocityMultiplier;
         yVelocity *= velocityMultiplier;
 

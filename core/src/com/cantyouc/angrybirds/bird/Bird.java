@@ -89,12 +89,13 @@ public class Bird {
             y = (int) ground.getHeight();
             yVelocity = 0;
             xVelocity = 0;
+            setExhausted(true);
         }
 
-        if (x < 0 || x > ground.getWidth() || y > ground.getHeight() + 600) {
+        if (x < 0 || x > ground.getWidth() || y > ground.getHeight() + 800) {
             throw new BirdOutOfScreenException("Bird is out of screen bounds.");
         }
-        setExhausted(true);
+
         hitbox.setPosition(x, y);
     }
 
