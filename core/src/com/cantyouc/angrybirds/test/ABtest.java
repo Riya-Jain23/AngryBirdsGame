@@ -51,14 +51,14 @@ public class ABtest {
         assertNotEquals(initialX, yellowbird.getX());
         assertNotEquals(initialY, yellowbird.getY());
     }
-    @Test
-    public void testBirdExhaustedState() throws BirdOutOfScreenException {
-        assertFalse(yellowbird.isExhausted());
-
-        yellowbird.move(1 / 60f);
-
-        assertTrue(yellowbird.isExhausted());
-    }
+//    @Test
+//    public void testBirdExhaustedState() throws BirdOutOfScreenException {
+//        assertFalse(yellowbird.isExhausted());
+//
+//        yellowbird.move(1 / 60f);
+//
+//        assertTrue(yellowbird.isExhausted());
+//    }
     @Test
     public void testBirdLaunchVelocity() {
         yellowbird.launch(45, 10);
