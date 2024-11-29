@@ -368,7 +368,6 @@ public class MainScreen extends ScreenAdapter implements Screen, Serializable  {
         stage.addActor(root);
 
         createTopBar(root);
-        createControlArea(root);
     }
     private void createTopBar(Table root) {
         Table table = new Table();
@@ -400,31 +399,8 @@ public class MainScreen extends ScreenAdapter implements Screen, Serializable  {
         });
         return pauseButton;
     }
-    private void createControlArea(Table root) {
-        root.row();
 
-        Touchpad.TouchpadStyle touchpadStyle = new Touchpad.TouchpadStyle();
-        touchpadStyle.knob = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("aim.png"))));
-        touchpadStyle.background = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("transparent.png"))));
-        final Touchpad touchpad = new Touchpad(0, touchpadStyle);
 
-        touchpad.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                if (currentBird != null) {
-                    if (touchpad.getKnobPercentX() > 0) {
-                        currentBird.setXVelocity(1);
-                    } else if (touchpad.getKnobPercentX() < 0) {
-                        currentBird.setXVelocity(-1);
-                    } else {
-                        currentBird.setXVelocity(0);
-                    }
-                }
-            }
-        });
-
-        root.add(touchpad).expandX().colspan(4);
-    }
     private void initializePigs() {
         pigs = new pig[]{
             new pig(1490, height / 2 - 160, 0.3f, ground, "pig1.png"),
