@@ -37,6 +37,9 @@ public class Bird {
         this.image = image;
         this.image.flip(this.flipped, false);
     }
+    public void setX(int x) {
+        this.x = x;
+    }
     public TextureRegion getImage() {
         return image;
     }
