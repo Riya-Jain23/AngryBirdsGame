@@ -4,6 +4,7 @@ import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
@@ -128,24 +129,45 @@ public class MainScreen extends ScreenAdapter implements Screen, Serializable  {
             @Override
             public boolean touchDragged(int screenX, int screenY, int pointer) {
                 if (isDragging && currentBird != null && !birdLaunched) {
+                    // Convert screen coordinates to world coordinates
                     Vector2 touch = new Vector2(screenX, screenY);
                     viewport.unproject(touch);
 
                     dragEndX = touch.x;
                     dragEndY = touch.y;
 
+                    // Calculate the drag distance from the starting point (slingshot)
                     float dragDistance = Vector2.dst(dragStartX, dragStartY, dragEndX, dragEndY);
+
+                    // Limit the maximum drag distance
                     if (dragDistance > MAX_DRAG_DISTANCE) {
+                        // Limit drag distance and maintain the direction
                         float angle = (float) Math.atan2(dragEndY - dragStartY, dragEndX - dragStartX);
                         dragEndX = dragStartX + MAX_DRAG_DISTANCE * (float) Math.cos(angle);
                         dragEndY = dragStartY + MAX_DRAG_DISTANCE * (float) Math.sin(angle);
                     }
 
-                    // Update bird position while dragging
+                    // Calculate the drag velocity based on the distance and direction of the drag
+                    // The multiplier controls the speed; a smaller value makes the bird move slower
+                    float xVelocity = (dragStartX - dragEndX) * 0.25f;  // Scale the velocity for smoother effect
+                    float yVelocity = (dragStartY - dragEndY) * 0.25f;  // Same for vertical direction
+
+                    // Update the bird's position while dragging to follow the mouse/touch
                     currentBird.setPosition(
-                        slingshot.getX() + (dragEndX - dragStartX) - 15,
-                        slingshot.getY() + (dragEndY - dragStartY) + 50
+                        slingshot.getX() + (dragEndX - dragStartX) - 15,  // Adjust for slingshot offset
+                        slingshot.getY() + (dragEndY - dragStartY) + 50   // Adjust for slingshot offset
                     );
+
+                    // Update the bird's velocity during the drag
+                    currentBird.setXVelocity(xVelocity);
+                    currentBird.setYVelocity(yVelocity);
+
+                    // Draw the trajectory based on the calculated velocity
+                    if (currentBird != null) {
+                        // Pass the current bird's texture to the drawTrajectory method
+                        drawTrajectory(game.batch, currentBird.getX(), currentBird.getY(), xVelocity, yVelocity, currentBird.getImage());
+                    }
+
                     return true;
                 }
                 return false;
@@ -154,27 +176,35 @@ public class MainScreen extends ScreenAdapter implements Screen, Serializable  {
             @Override
             public boolean touchUp(int screenX, int screenY, int pointer, int button) {
                 if (isDragging && currentBird != null && !birdLaunched) {
+                    // Convert screen coordinates to world coordinates
                     Vector2 touch = new Vector2(screenX, screenY);
                     viewport.unproject(touch);
 
-                    float vx = (dragStartX - dragEndX) * 0.25f; // Opposite to drag
+                    // Calculate the velocity based on the drag distance (opposite of drag direction)
+                    float vx = (dragStartX - dragEndX) * 0.25f;  // The factor controls speed; smaller is slower
                     float vy = (dragStartY - dragEndY) * 0.25f;
 
+                    // Set the velocity for the current bird
                     currentBird.setXVelocity(vx);
                     currentBird.setYVelocity(vy);
 
-                    ArrayList<Object> trajectory = predictTrajectory(
-                        currentBird.getX(), currentBird.getY(),
-                        vx, vy,
-                        0.05f, 3.0f
-                    );
-
+                    // Mark bird as launched and end dragging
                     birdLaunched = true;
                     isDragging = false;
+
+                    // Optionally, predict and draw the trajectory before the bird is launched
+                    // If you want to visualize the trajectory even after launch, you can call drawTrajectory here
+                    // (but only if the bird is launched)
+                    if (birdLaunched) {
+                        // Draw trajectory using predicted velocities (or the current velocity)
+                        drawTrajectory(game.batch, currentBird.getX(), currentBird.getY(), vx, vy, currentBird.getImage());
+                    }
+
                     return true;
                 }
                 return false;
             }
+
 
             @Override
             public boolean keyDown(int keycode) {
@@ -477,34 +507,86 @@ private boolean checkPigCollision(Bird bird, pig pig) {
         }
     }
 
+    private void drawTrajectory(SpriteBatch batch, float startX, float startY, float xVelocity, float yVelocity, TextureRegion birdImage) {
+        // Variables for calculating trajectory
+        float xProjectile = startX;
+        float yProjectile = startY;
+
+        // Define the gravity (adjust as needed)
+        float gravity = 0.02f;
+        float velocityMultiplier = 0.4f;  // Change this value to adjust trajectory length
+        xVelocity *= velocityMultiplier;
+        yVelocity *= velocityMultiplier;
+
+        // Start batch rendering
+        batch.begin();
+
+        int i = 0;
+        while (i <= 170 && xProjectile >= 0 && xProjectile <= ground.getWidth() && yProjectile > ground.getHeight()) {
+            if (i % 3 == 0) { // Draw a dot every 3 iterations
+                // Draw the bird's texture at the calculated position (adjust size as needed)
+                batch.draw(birdImage, xProjectile, yProjectile, 5, 5);  // You can adjust the size of the dot (5x5 is the size here)
+            }
+            i++;
+
+            // Update the projectile's position based on velocity
+            xProjectile += xVelocity;
+            yProjectile += yVelocity;
+
+            // Apply gravity to the vertical velocity
+            yVelocity -= gravity;
+        }
+
+        // End batch rendering
+        batch.end();
+    }
+
+
+
+
+
     @Override
     public void render(float deltaTime) {
+        // Clear the screen with a light gray color
         Gdx.gl.glClearColor(0.9f, 0.9f, 0.9f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+        // Update camera and viewport settings
         camera.update();
         viewport.update(width, height);
 
+        // Set the projection matrix for the SpriteBatch (this is for 2D rendering)
         game.batch.setProjectionMatrix(stage.getViewport().getCamera().combined);
+
+        // Start rendering the batch
         game.batch.begin();
+
+        // Draw the background
         game.batch.draw(background, 0, 0, width, height);
 
+        // Draw the slingshot
         slingshot.draw(game.batch);
 
+        // Draw birds (current bird and other birds if necessary)
         for (Bird bird : birds) {
             try {
                 bird.draw(game.batch);
+
+                // Check if this is the current bird and it has been launched
                 if (bird == currentBird && birdLaunched) {
-                    bird.move(deltaTime);
+                    bird.move(deltaTime);  // Move the bird based on its velocity
+
+                    // Handle specific bird behavior, like the Black bird's explosion
                     if (bird instanceof Black) {
                         Black blackBird = (Black) bird;
                         blackBird.renderExplosion(game.batch);
-
-
                         if (blackBird.shouldTriggerExplosion() && !blackBird.hasExploded()) {
                             blackBird.explode(obstacles, pigs);
                             blackBird.resetExplosionFlag();
                         }
                     }
+
+                    // Check for collisions with obstacles
                     for (BaseObstacle obstacle : obstacles) {
                         if (obstacle.isHitByBird(bird)) {
                             float pushX = (bird.getXVelocity() * 15f);
@@ -515,15 +597,19 @@ private boolean checkPigCollision(Bird bird, pig pig) {
                             obstacle.onCollision(bird);
                         }
                     }
+
+                    // Check for collisions with pigs
                     for (int i = 0; i < pigs.length; i++) {
                         if (checkPigCollision(bird, pigs[i])) {
                             destroyPig(i);
                         }
                     }
+
+                    // If the bird's velocity is low, move to the next bird
                     if (Math.abs(bird.getXVelocity()) < 0.1 && Math.abs(bird.getYVelocity()) < 0.1) {
                         currentBirdIndex++;
                         setupNextBird();
-                        if (currentBirdIndex >= birds.length){
+                        if (currentBirdIndex >= birds.length) {
                             checkLevelCompletion();
                         }
                     }
@@ -540,12 +626,14 @@ private boolean checkPigCollision(Bird bird, pig pig) {
             }
         }
 
+        // Draw obstacles
         for (BaseObstacle obstacle : obstacles) {
             obstacle.update(deltaTime);
             obstacle.draw(game.batch);
             obstacle.checkPigContact(pigs);
         }
 
+        // Draw pigs
         for (pig pig : pigs) {
             if (pig != null) {
                 pig.update(deltaTime);
@@ -553,33 +641,45 @@ private boolean checkPigCollision(Bird bird, pig pig) {
             }
         }
 
+        // End the batch rendering for textures
         game.batch.end();
 
+        // Draw the ground using a ShapeRenderer
         renderer.setProjectionMatrix(stage.getViewport().getCamera().combined);
         renderer.begin(ShapeRenderer.ShapeType.Filled);
         renderer.setColor(0f, 1f, 0f, 1f);
         ground.draw(renderer);
         renderer.end();
 
+        // If dragging, draw the trajectory
         if (isDragging && currentBird != null && !birdLaunched) {
+            // Enable blending for a smooth trajectory
             Gdx.gl.glEnable(GL20.GL_BLEND);
+
+            // Begin drawing with ShapeRenderer for the trajectory
             renderer.begin(ShapeRenderer.ShapeType.Line);
-            renderer.setColor(1, 0, 0, 1);
+            renderer.setColor(1, 0, 0, 1);  // Red color for the trajectory
 
-            ArrayList<Object> trajectory = predictTrajectory(
-                currentBird.getX(), currentBird.getY(),
-                (dragStartX - dragEndX) * 0.25f,
-                (dragStartY - dragEndY) * 0.25f,
-                0.05f, 3.0f
-            );
+            // Calculate the velocity for the trajectory based on drag distance
+            float xVelocity = (dragStartX - dragEndX) * 0.25f;
+            float yVelocity = (dragStartY - dragEndY) * 0.25f;
 
+            // Draw the trajectory with dots
+            drawTrajectory(game.batch, currentBird.getX(), currentBird.getY(), xVelocity, yVelocity, currentBird.getImage());
+
+            // End the trajectory drawing
             renderer.end();
+
+            // Disable blending after drawing the trajectory
             Gdx.gl.glDisable(GL20.GL_BLEND);
         }
 
+        // Act and draw the stage (UI elements and other widgets)
         stage.act();
         stage.draw();
     }
+
+
 
     private float calculateDistanceTraveled(Bird bird) {
         return Math.abs(bird.getX() - 200);
