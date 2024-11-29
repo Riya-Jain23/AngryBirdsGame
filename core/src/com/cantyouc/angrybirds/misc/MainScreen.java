@@ -536,7 +536,7 @@ private boolean checkPigCollision(Bird bird, pig pig) {
                             obstacle.push(pushX, pushY);
                             obstacle.update(deltaTime);
                             obstacle.crumble();
-                            obstacle.isCrumbling = true;
+//                            obstacle.isCrumbling = true;
                             obstacle.onCollision(bird);
                         }
                     }
