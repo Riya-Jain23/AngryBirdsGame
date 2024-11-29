@@ -15,10 +15,11 @@ import com.cantyouc.angrybirds.misc.AngryBirds;
 public class PauseMenu extends Menu {
     private int level;
 
-    public PauseMenu(final AngryBirds game) {
+    public PauseMenu(final AngryBirds game, final int level) {
         super(game);
         table.setFillParent(true);
         stage.addActor(table);
+        this.level = level;
 
         ImageButton resume = new ImageButton(
             new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("resumeUp.png")))),
@@ -40,7 +41,7 @@ public class PauseMenu extends Menu {
         save.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                game.setScreen(new SaveMenu(game));
+                game.setScreen(new SaveMenu(game, level));
                 dispose();
             }
         });

@@ -22,11 +22,13 @@ import java.nio.file.Paths;
 
 public class SaveMenu extends Menu {
     private Button slot1, slot2, slot3, slot4;
-    public SaveMenu(final AngryBirds game) {
+    private int level;
+    public SaveMenu(final AngryBirds game, int level) {
 
         super(game);
         table.add(new Image(new Texture(Gdx.files.internal("saveGame.png")))).align(Align.center);
         table.row();
+        this.level = level;
 
         addSlots();
 
@@ -38,7 +40,7 @@ public class SaveMenu extends Menu {
         goBack.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                game.setScreen(new PauseMenu(game));
+                game.setScreen(new PauseMenu(game, level));
                 dispose();
             }
         });
@@ -133,7 +135,7 @@ public class SaveMenu extends Menu {
                     table.add(slot4).growX().pad(10);
                 }
 
-                game.setScreen(new PauseMenu(game));  // Go back to pause menu after saving
+                game.setScreen(new PauseMenu(game, level));  // Go back to pause menu after saving
                 dispose();
             }
         });

@@ -414,7 +414,7 @@ public class MainScreen extends ScreenAdapter implements Screen, Serializable  {
         pauseButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                game.setScreen(new PauseMenu(game));
+                game.setScreen(new PauseMenu(game, level));
                 dispose();
             }
         });
