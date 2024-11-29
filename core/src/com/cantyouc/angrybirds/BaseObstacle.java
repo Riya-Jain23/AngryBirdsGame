@@ -41,7 +41,6 @@ public abstract class BaseObstacle {
     public float getHeight() { return height; }
     public void checkPigContact(pig[] pigs) {
         if (isCrumbling) {
-
             for (pig pig : pigs) {
                 if (pig != null && !pig.isDead() && pig.isInContactWithObstacle(this)) {
 
