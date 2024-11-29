@@ -103,17 +103,27 @@ public class MainScreen extends ScreenAdapter implements Screen, Serializable  {
                 Vector2 touch = new Vector2(screenX, screenY);
                 viewport.unproject(touch);
 
-                // Check if touch is near slingshot
-                if (currentBird != null && !birdLaunched &&
-                    Math.abs(touch.x - slingshot.getX()) < 50 &&
-                    Math.abs(touch.y - slingshot.getY()) < 50) {
-                    isDragging = true;
-                    dragStartX = touch.x;
-                    dragStartY = touch.y;
-                    return true;
+                // Check if touch is on the bird
+                if (currentBird != null && !birdLaunched) {
+                    // Assuming the bird has position (X, Y), width, and height
+                    float birdX = currentBird.getX();  // Get the bird's X position
+                    float birdY = currentBird.getY();  // Get the bird's Y position
+                    float birdWidth = currentBird.getWidth();  // Get the bird's width
+                    float birdHeight = currentBird.getHeight();  // Get the bird's height
+
+                    // Check if the touch is within the bird's bounding box
+                    if (touch.x >= birdX && touch.x <= birdX + birdWidth &&
+                        touch.y >= birdY && touch.y <= birdY + birdHeight) {
+                        isDragging = true;
+                        dragStartX = touch.x;
+                        dragStartY = touch.y;
+                        return true;
+                    }
                 }
                 return false;
             }
+
+
 
             @Override
             public boolean touchDragged(int screenX, int screenY, int pointer) {
@@ -217,13 +227,13 @@ public class MainScreen extends ScreenAdapter implements Screen, Serializable  {
 
         int birdXPosition2 = 200;
         int birdYPosition2 = 150;
-        birds[1] = new Bird(birdXPosition2, birdYPosition2, birdHeight, birdWidth, ground, false);
-        birds[1].setImage(new TextureRegion(new Texture(Gdx.files.internal("bird1.png"))));
+        birds[1] = new Black(birdXPosition2, birdYPosition2, birdHeight, birdWidth, ground, false);
+        birds[1].setImage(new TextureRegion(new Texture(Gdx.files.internal("bird2.png"))));
 
         int birdXPosition3 = 100;
         int birdYPosition3 = 150;
-        birds[2] = new Bird(birdXPosition3, birdYPosition3, birdHeight, birdWidth, ground, false);
-        birds[2].setImage(new TextureRegion(new Texture(Gdx.files.internal("bird1.png"))));
+        birds[2] = new YellowBird(birdXPosition3, birdYPosition3, birdHeight, birdWidth, ground, false);
+        birds[2].setImage(new TextureRegion(new Texture(Gdx.files.internal("bird3.png"))));
     }
     private void initializeObstacles() {
         obstacles = new BaseObstacle[]{
