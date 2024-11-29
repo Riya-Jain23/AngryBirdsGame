@@ -217,13 +217,13 @@ public class MainScreen extends ScreenAdapter implements Screen, Serializable  {
 
         int birdXPosition2 = 200;
         int birdYPosition2 = 150;
-        birds[1] = new Black(birdXPosition2, birdYPosition2, birdHeight, birdWidth, ground, false);
-        birds[1].setImage(new TextureRegion(new Texture(Gdx.files.internal("bird2.png"))));
+        birds[1] = new Bird(birdXPosition2, birdYPosition2, birdHeight, birdWidth, ground, false);
+        birds[1].setImage(new TextureRegion(new Texture(Gdx.files.internal("bird1.png"))));
 
         int birdXPosition3 = 100;
         int birdYPosition3 = 150;
-        birds[2] = new YellowBird(birdXPosition3, birdYPosition3, birdHeight, birdWidth, ground, false);
-        birds[2].setImage(new TextureRegion(new Texture(Gdx.files.internal("bird3.png"))));
+        birds[2] = new Bird(birdXPosition3, birdYPosition3, birdHeight, birdWidth, ground, false);
+        birds[2].setImage(new TextureRegion(new Texture(Gdx.files.internal("bird1.png"))));
     }
     private void initializeObstacles() {
         obstacles = new BaseObstacle[]{
@@ -261,25 +261,26 @@ public class MainScreen extends ScreenAdapter implements Screen, Serializable  {
             new GlassObstacle(1500, height / 2 - 400),
             new WoodenObstacle(1300, height / 2 - 320),
             new WoodenObstacle(1500, height / 2 - 320),
-            new GlassObstacle(1500, height / 2 - 280),
-            new WoodenObstacle(1350, height / 2 - 237),
-            new WoodenObstacle(1300, height / 2 - 225),
-            new GlassObstacle(1300, height / 2 - 145),
-            new WoodenObstacle(1250, height / 2 - 60),
-
-            new WoodenObstacle(1100, height / 2 - 400),
-            new WoodenObstacle(1100, height / 2 - 320),
+            new GlassObstacle(1500, height / 2 - 240),
+            new WoodenObstacle(1300, height / 2 - 240),
+            new WoodenObstacle(1300, height / 2 - 160),
+//            new WoodenObstacle(1300, height / 2 - 160),
+            new GlassObstacle(1100, height / 2 - 160),
+//            new WoodenObstacle(1250, height / 2 - 60),
+//
+            new MetalObstacle(1100, height / 2 - 400),
+            new GlassObstacle(1100, height / 2 - 320),
             new MetalObstacle(1100, height / 2 - 240),
-            new WoodenObstacle(1100, height / 2 - 160),
-            new WoodenObstacle(1100, height / 2 - 80),
-            new MetalObstacle(1100, height / 2-80)
+            new GlassObstacle(1100, height / 2 - 160),
+            new MetalObstacle(1100, height / 2 - 80),
+            new GlassObstacle(1100, height / 2)
         };
     }
 
     private void initializePigsLevel2() {
         pigs = new pig[]{
-            new pig(1400, height / 2 - 220, 0.3f, ground, "pig2.png"),
-            new pig(1280, height / 2 - 50, 0.3f, ground, "pig2.png"),
+            new pig(1480, height / 2 - 160, 0.3f, ground, "pig2.png"),
+            new pig(1280, height / 2 - 80, 0.3f, ground, "pig2.png"),
             new pig(1080, height / 2 + 80, 0.3f, ground, "pig2.png")
         };
     }
@@ -312,33 +313,32 @@ public class MainScreen extends ScreenAdapter implements Screen, Serializable  {
 
     private void initializeObstaclesLevel3() {
         obstacles = new BaseObstacle[]{
-            // More complex obstacle arrangement
-            new WoodenObstacle(1300, height / 2 - 400),
             new MetalObstacle(1500, height / 2 - 400),
-            new WoodenObstacle(1300, height / 2 - 320),
             new MetalObstacle(1500, height / 2 - 320),
-            new WoodenObstacle(1500, height / 2 - 280),
-            new WoodenObstacle(1350, height / 2 - 237),
-            new WoodenObstacle(1300, height / 2 - 225),
-            new MetalObstacle(1300, height / 2 - 145),
-            new WoodenObstacle(1250, height / 2 - 60),
+            new WoodenObstacle(1500, height / 2 - 240),
 
-            new WoodenObstacle(1100, height / 2 - 400),
-            new GlassObstacle(1100, height / 2 - 320),
-            new WoodenObstacle(1100, height / 2 - 240),
-            new WoodenObstacle(1100, height / 2 - 160),
+            new GlassObstacle(1300, height / 2 - 240),
+            new MetalObstacle(1300, height / 2 - 160),
+            new GlassObstacle(1300, height / 2 - 320),
+            new GlassObstacle(1300, height / 2 - 400),
+
+            new MetalObstacle(1100, height / 2 - 400),
+            new MetalObstacle(1100, height / 2 - 320),
+            new MetalObstacle(1100, height / 2 - 240),
+            new MetalObstacle(1100, height / 2 - 160),
             new GlassObstacle(1100, height / 2 - 80),
-            new WoodenObstacle(1100, height / 2),
+            new MetalObstacle(1100, height / 2),
         };
     }
 
     private void initializePigsLevel3() {
         pigs = new pig[]{
-            new pig(1400, height / 2 - 220, 0.3f, ground, "pig3.png"),
-            new pig(1280, height / 2 - 50, 0.3f, ground, "pig3.png"),
-            new pig(1080, height / 2 + 80, 0.3f, ground, "pig3.png"),
-            new pig(950, height / 2 - 400, 0.3f, ground, "pig3.png"),
-            new pig(1600, height / 2 - 400, 0.3f, ground, "pig3.png")
+            new pig(1600, height / 2 - 400, 0.3f, ground, "pig3.png"),
+            new pig(1485, height / 2 - 160, 0.3f, ground, "pig3.png"),
+            new pig(1285, height / 2 - 80, 0.3f, ground, "pig3.png"),
+            new pig(1090, height / 2 + 80, 0.3f, ground, "pig3.png"),
+            new pig(950, height / 2 - 400, 0.3f, ground, "pig3.png")
+
         };
     }
 
