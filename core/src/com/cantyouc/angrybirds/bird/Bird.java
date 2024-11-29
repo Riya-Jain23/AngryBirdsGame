@@ -1,6 +1,5 @@
 package com.cantyouc.angrybirds.bird;
 
-import com.cantyouc.angrybirds.attack.AttackType;
 import com.cantyouc.angrybirds.exception.BirdOutOfScreenException;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -18,7 +17,6 @@ public class Bird {
     private final Rectangle hitbox;
     private final Ground ground;
     protected float xVelocity, yVelocity;
-    protected AttackType defaultAttack;
     protected TextureRegion image;
     protected int maxAttackPower;
     private int attackAngle;

@@ -50,10 +50,22 @@ public class pig {
 
     public boolean isInContactWithObstacle(BaseObstacle obstacle) {
         if (isDead) return false;
-        return this.x < obstacle.getX() + obstacle.getWidth() &&
-            this.x + this.width > obstacle.getX() &&
-            this.y < obstacle.getY() + obstacle.getHeight() &&
-            this.y + this.height > obstacle.getY();
+
+        float margin = 200.0f;
+
+        boolean inContact = this.x <= obstacle.getX() + obstacle.getWidth() + margin &&
+            this.x + this.width >= obstacle.getX() - margin &&
+            this.y <= obstacle.getY() + obstacle.getHeight() + margin &&
+            this.y + this.height >= obstacle.getY() - margin;
+
+        if (inContact) {
+            System.out.println("Pig near or in contact with obstacle. Margin: " + margin);
+            return true;
+        } else {
+            System.out.println("No near or actual contact detected. Pig: (" + x + ", " + y +
+                "), Obstacle: (" + obstacle.getX() + ", " + obstacle.getY() + ")");
+            return false;
+        }
     }
 
     public void applyForce(float forceY) {

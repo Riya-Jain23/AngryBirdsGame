@@ -1,11 +1,9 @@
 package com.cantyouc.angrybirds.bird;
 
-import com.cantyouc.angrybirds.attack.AttackType;
 import com.cantyouc.angrybirds.misc.Ground;
 
 public class Red extends Bird {
 
-    protected AttackType defaultAttack;
     protected int maxAttackPower;
 
 
