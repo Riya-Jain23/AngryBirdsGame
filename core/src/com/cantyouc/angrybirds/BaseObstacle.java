@@ -14,9 +14,9 @@ public abstract class BaseObstacle {
     private float yVelocity;
     protected float width, height;
     protected Texture texture;
-    protected float hardness; // How resistant the obstacle is to damage
+    protected float hardness;
     protected float weight;
-    public boolean isCrumbling = false;// Affects how easily it can be moved or destroyed
+    public boolean isCrumbling = false;
 
     public BaseObstacle(float x, float y, String texturePath, float hardness, float weight) {
         this.x = x;
@@ -41,11 +41,11 @@ public abstract class BaseObstacle {
     public float getHeight() { return height; }
     public void checkPigContact(pig[] pigs) {
         if (isCrumbling) {
-            // Check for pigs in contact with the crumbling obstacle
+
             for (pig pig : pigs) {
                 if (pig != null && !pig.isDead() && pig.isInContactWithObstacle(this)) {
-                    // If a pig is in contact with the crumbling obstacle, apply gravity or force
-                    pig.applyForce(-100);  // Apply a downward force to simulate falling
+
+                    pig.applyForce(-100);
                 }
             }
         }
@@ -66,12 +66,10 @@ public abstract class BaseObstacle {
             float randomWidth = MathUtils.random(10, 50);
             float randomHeight = MathUtils.random(10, 50);
 
-            // Ensure that the piece is within the bounds of the obstacle texture
             if (randomX + randomWidth > width) randomWidth = width - randomX;
             if (randomY + randomHeight > height) randomHeight = height - randomY;
             TextureRegion region = new TextureRegion(texture, (int) randomX, (int) randomY, (int) randomWidth, (int) randomHeight);
 
-            // Create a piece and add it to the list
             Piece piece = new Piece(region, x + randomX, y + randomY, randomWidth, randomHeight,
                 MathUtils.random(-50, 50), MathUtils.random(-50, 50));
             pieces.add(piece);

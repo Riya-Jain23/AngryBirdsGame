@@ -32,7 +32,7 @@ public class Black extends Bird {
     }
     public void move(float deltaTime) throws BirdOutOfScreenException {
         super.move(deltaTime);
-        // Update smoke effect if active
+
         if (smokeEffect.isComplete()) return;
         smokeEffect.setPosition(getX(), getY());
         smokeEffect.update(deltaTime);
@@ -92,7 +92,6 @@ public class Black extends Bird {
         );
     }
 
-    // Reset explosion flag after triggering explosion
     public void resetExplosionFlag() {
         this.triggerExplosion = false;
     }

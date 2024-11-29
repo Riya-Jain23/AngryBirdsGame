@@ -31,7 +31,7 @@ public class SelectionMenu extends Menu {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
 
-                game.setScreen(new MainScreen(game, 1)); // replace
+                game.setScreen(new MainScreen(game, 1));
                 VictoryMenu.currentLevel = 1;
             }
         });
@@ -39,7 +39,7 @@ public class SelectionMenu extends Menu {
         level2Button.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                game.setScreen(new MainScreen(game, 2)); // replace
+                game.setScreen(new MainScreen(game, 2));
                 VictoryMenu.currentLevel = 2;
             }
         });
@@ -47,8 +47,8 @@ public class SelectionMenu extends Menu {
         level3Button.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                // Handle level 3 selection
-                game.setScreen(new MainScreen(game, 3)); // replace
+
+                game.setScreen(new MainScreen(game, 3));
                 VictoryMenu.currentLevel = 3;
             }
         });

@@ -22,7 +22,7 @@ public class GameState implements Serializable {
     private final boolean birdLaunched;
 
     public GameState(AngryBirds game) {
-        // Save birds' states
+
         this.birds = new ArrayList<>();
         for (Bird bird : game.getBirds()) {
             birds.add(new BirdState(
@@ -34,27 +34,27 @@ public class GameState implements Serializable {
             ));
         }
 
-        // Save pigs' states
+
         this.pigs = new ArrayList<>();
         for (pig pig : game.getPigs()) {
             pigs.add(new PigState(pig));
         }
 
-        // Save obstacles' states
+
         this.obstacles = new ArrayList<>();
         for (BaseObstacle obstacle : game.getObstacles()) {
             obstacles.add(new SerializedObstacle(obstacle));
         }
 
-        // Save slingshot state
+
         this.slingshot = game.getSlingshot();
 
-        // Save game-specific state variables
+
         this.currentBirdIndex = game.getCurrentBirdIndex();
         this.birdLaunched = game.isBirdLaunched();
     }
 
-    // Reconstruct birds from their saved states
+
     public Bird[] getBirds(Ground ground) {
         List<Bird> birdList = new ArrayList<>();
         for (BirdState state : birds) {
@@ -67,7 +67,7 @@ public class GameState implements Serializable {
         return birdList.toArray(new Bird[0]);
     }
 
-    // Reconstruct pigs from their saved states
+
     public pig[] getPigs() {
         List<pig> pigList = new ArrayList<>();
         for (PigState state : pigs) {
@@ -76,7 +76,7 @@ public class GameState implements Serializable {
         return pigList.toArray(new pig[0]);
     }
 
-    // Reconstruct obstacles from their saved states
+
     public BaseObstacle[] getObstacles() {
         List<BaseObstacle> obstacleList = new ArrayList<>();
         for (SerializedObstacle state : obstacles) {
@@ -106,12 +106,11 @@ public class GameState implements Serializable {
         return recreatedObstacles;
     }
 
-    // Nested state classes for birds, pigs, and obstacles
     private static class BirdState implements Serializable {
         private final int x, y;
         private final float xVelocity, yVelocity;
         private final boolean exhausted;
-        private final int height = 70, width = 70;  // Default bird size
+        private final int height = 70, width = 70;
 
         public BirdState(int x, int y, float xVelocity, float yVelocity, boolean exhausted) {
             this.x = x;
@@ -145,14 +144,14 @@ public class GameState implements Serializable {
             this.y = obstacle.getY();
             this.width = obstacle.getWidth();
             this.height = obstacle.getHeight();
-            this.xVelocity = obstacle.getxVelocity(); // Use actual velocity
+            this.xVelocity = obstacle.getxVelocity();
             this.yVelocity = obstacle.getyVelocity();
-            this.isCrumbling = obstacle.isCrumbling(); // Add logic if needed to handle crumbling state
+            this.isCrumbling = obstacle.isCrumbling();
         }
 
         public BaseObstacle toObstacle() {
             BaseObstacle obstacle = new WoodenObstacle(x, y);
-            obstacle.push(xVelocity, yVelocity); // Restore movement state if necessary
+            obstacle.push(xVelocity, yVelocity);
             return obstacle;
         }
     }

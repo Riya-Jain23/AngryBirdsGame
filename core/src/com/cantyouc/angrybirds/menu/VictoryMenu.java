@@ -64,8 +64,7 @@ public class VictoryMenu implements Screen {
 
         nextButton.addListener(event -> {
             if (event.isHandled()) {
-                // Go to the next level, or wrap around to the first level if on the last one
-                currentLevel = (currentLevel % 3) + 1;  // Assuming there are 3 levels
+                currentLevel = (currentLevel % 3) + 1;
                 game.setScreen(new MainScreen(game, currentLevel));
                 dispose();
             }

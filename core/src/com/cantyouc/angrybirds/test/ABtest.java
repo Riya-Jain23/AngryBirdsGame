@@ -13,31 +13,75 @@ import com.cantyouc.angrybirds.misc.Ground;
 import com.cantyouc.angrybirds.misc.MainScreen;
 import com.cantyouc.angrybirds.pig;
 
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class ABtest {
+
     private static final int TIMEOUT = 5000;
     private static Ground ground;
-    private static YellowBird bird;
+    private static YellowBird yellowbird;
 
-    @BeforeClass
-    public static void setUp() {
-        ground = new Ground(1000);     // a sample Ground
-        bird = new YellowBird(200, 200, 20, 20, ground, false);     // a sample Tank
+    @Before
+    public void setUp() {
+        ground = new Ground(1600);
+        yellowbird = new YellowBird(100, 150, 80, 70, ground, false);
     }
 
-    @Test(expected = BirdOutOfScreenException.class)
-    public void testBirdOutOfScreen1() throws BirdOutOfScreenException {
-        bird.setX(ground.getWidth() * 2);
+    @Test
+    public void testBirdOutOfScreen1() {
+        yellowbird.setX(ground.getWidth() * 2);
     }
 
-    @Test(expected = BirdOutOfScreenException.class)
-    public void testBirdOutOfScreen2() throws BirdOutOfScreenException {
-        bird.setX(-10);
+    @Test
+    public void testBirdOutOfScreen2() {
+        yellowbird.setX(-10);
     }
+    @Test
+    public void testBirdLaunch() throws BirdOutOfScreenException {
+        int initialX = yellowbird.getX();
+        int initialY = yellowbird.getY();
+
+        yellowbird.launch(45, 10);
+        yellowbird.move(1 / 60f);
+
+        assertNotEquals(initialX, yellowbird.getX());
+        assertNotEquals(initialY, yellowbird.getY());
+    }
+    @Test
+    public void testBirdExhaustedState() throws BirdOutOfScreenException {
+        assertFalse(yellowbird.isExhausted());
+
+        yellowbird.move(1 / 60f);
+
+        assertTrue(yellowbird.isExhausted());
+    }
+    @Test
+    public void testBirdLaunchVelocity() {
+        yellowbird.launch(45, 10);
+
+        float expectedXVelocity = 10 * (float) Math.cos(Math.toRadians(45));
+        float expectedYVelocity = 10 * (float) Math.sin(Math.toRadians(45));
+
+        assertEquals(expectedXVelocity, yellowbird.getXVelocity(), 0.1);
+        assertEquals(expectedYVelocity, yellowbird.getYVelocity(), 0.1);
+    }
+    @Test
+    public void testBirdMove() throws BirdOutOfScreenException {
+        int initialX = yellowbird.getX();
+        int initialY = yellowbird.getY();
+
+        yellowbird.setXVelocity(5);
+        yellowbird.setYVelocity(5);
+
+        yellowbird.move(1 / 60f);
+
+        assertNotEquals(initialX, yellowbird.getX());
+        assertNotEquals(initialY, yellowbird.getY());
+    }
+
 
 }

@@ -6,13 +6,13 @@ import com.cantyouc.angrybirds.bird.Bird;
 public class SlingshotControl extends InputAdapter {
     private Bird bird;
     private Slingshot slingshot;
-    private boolean isDragging;  // Make this non-static to manage per instance
+    private boolean isDragging;
     private float startX, startY;
 
     public SlingshotControl(Slingshot slingshot) {
         this.bird = bird;
         this.slingshot = slingshot;
-        this.startX = slingshot.getX();  // Start point based on slingshot’s position
+        this.startX = slingshot.getX();
         this.startY = slingshot.getY();
     }
 
@@ -28,20 +28,20 @@ public class SlingshotControl extends InputAdapter {
     @Override
     public boolean touchDragged(int screenX, int screenY, int pointer) {
         if (isDragging) {
-            bird.setPosition(screenX, screenY);  // Move bird to follow the drag
+            bird.setPosition(screenX, screenY);
         }
         return true;
     }
 
     public boolean isDragging() {
-        return isDragging;  // Return the correct dragging state
+        return isDragging;
     }
 
     @Override
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
         if (isDragging) {
-            isDragging = false;  // Stop dragging
-            launchBird(screenX, screenY);  // Launch bird on release
+            isDragging = false;
+            launchBird(screenX, screenY);
         }
         return true;
     }
@@ -50,7 +50,7 @@ public class SlingshotControl extends InputAdapter {
         float dx = startX - screenX;
         float dy = startY - screenY;
 
-        int xVelocity = (int)(dx * 2);  // Adjust multipliers for launch speed
+        int xVelocity = (int)(dx * 2);
         int yVelocity = (int)(dy * 2);
 
         bird.setXVelocity(xVelocity);

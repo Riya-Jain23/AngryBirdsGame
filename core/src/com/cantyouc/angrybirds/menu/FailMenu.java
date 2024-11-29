@@ -29,9 +29,9 @@ public class FailMenu implements Screen {
         this.level = level;
         this.stage = new Stage(new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
         this.skin = new Skin(Gdx.files.internal("orangepeelui/uiskin.json"));
-        this.background = new Texture("fail_background.png"); // Your fail background image
-        this.backButtonImage = new Texture("back_to_main_menu.png"); // Image for "Back to Main Menu" button
-        this.restartButtonImage = new Texture("restart_level.png"); // Image for "Restart Level" button
+        this.background = new Texture("fail_background.png");
+        this.backButtonImage = new Texture("back_to_main_menu.png");
+        this.restartButtonImage = new Texture("restart_level.png");
 
         float buttonWidth = 200f;
         float buttonHeight = 200f;

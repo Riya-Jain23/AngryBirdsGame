@@ -27,7 +27,7 @@ public class pig {
     }
 
     public void draw(SpriteBatch batch) {
-        if (!isDead) { // Only draw if the pig is not dead
+        if (!isDead) {
             batch.draw(texture, x, y, width, height);
         }
     }
@@ -57,9 +57,9 @@ public class pig {
     }
 
     public void applyForce(float forceY) {
-        if (isDead) return; // Do not apply force if the pig is dead
+        if (isDead) return;
 
-        this.velocityY = forceY; // Apply a force (like pushing the pig off the obstacle)
+        this.velocityY = forceY;
     }
 
     public float getX() {
@@ -85,7 +85,7 @@ public class pig {
     public void markAsDead() {
         if (!isDead) {
             System.out.println("Pig marked as dead at: " + getX() + ", " + getY());
-            isDead = true;  // Mark the pig as dead
+            isDead = true;
         }
     }
 
@@ -95,7 +95,7 @@ public class pig {
 
     public void dispose() {
         if (isDead) return;
-        texture.dispose(); // Clean up texture
+        texture.dispose();
     }
 
 }

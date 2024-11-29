@@ -25,7 +25,7 @@ public class Piece {
     public void update(float deltaTime) {
         this.x += xVelocity * deltaTime;
         this.y += yVelocity * deltaTime;
-        this.yVelocity -= 9.8f * deltaTime;  // Apply gravity
+        this.yVelocity -= 9.8f * deltaTime;
     }
 
     public void draw(SpriteBatch batch) {

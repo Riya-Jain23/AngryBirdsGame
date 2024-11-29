@@ -61,7 +61,7 @@ public class SaveMenu extends Menu {
 
         Button[] slots = {slot1, slot2, slot3, slot4};
         for (Button slot : slots) {
-            if (slot != null) {  // Ensure that the slot is not null
+            if (slot != null) {
                 table.add(slot).growX().pad(10);
                 table.row();
             } else {
@@ -99,24 +99,22 @@ public class SaveMenu extends Menu {
             public void changed(ChangeEvent event, Actor actor) {
                 System.out.println("Code reached here!");
                 Gdx.app.log("SaveMenu", "Saving game to: " + Paths.get("game-" + num + ".dat"));
-                // Save the game to that slot
                 ObjectOutputStream out;
                 try {
-                    // Ensure the file exists by creating it if it doesn't
                     File file = new File("game-" + num + ".dat");
                     if (!file.exists()) {
-                        file.createNewFile();  // This will create the file if it doesn't exist
+                        file.createNewFile();
                     }
 
                     out = new ObjectOutputStream(Files.newOutputStream(Paths.get("game-" + num + ".dat")));
-                    out.writeObject(new GameState(game));  // Write the game state to the file
+                    out.writeObject(new GameState(game));
                     out.close();
                     Gdx.app.log("SaveMenu", "Game saved to slot " + num);
                 } catch (IOException e) {
                     Gdx.app.log("AngryBirds", "Error saving game: " + e.getMessage());
                 }
 
-                // Change the button to occupied after saving the game
+
                 if (num == 1) {
                     slot1 = makeOccupiedSlot();
                     button.remove();
@@ -135,7 +133,7 @@ public class SaveMenu extends Menu {
                     table.add(slot4).growX().pad(10);
                 }
 
-                game.setScreen(new PauseMenu(game, level));  // Go back to pause menu after saving
+                game.setScreen(new PauseMenu(game, level));
                 dispose();
             }
         });

@@ -86,7 +86,7 @@ public class Bird {
         y += yVelocity * deltaTime;
 
         if (y <= ground.getHeight()) {
-            y = (int) ground.getHeight();  // Snap to ground level
+            y = (int) ground.getHeight();
             yVelocity = 0;
             xVelocity = 0;
         }

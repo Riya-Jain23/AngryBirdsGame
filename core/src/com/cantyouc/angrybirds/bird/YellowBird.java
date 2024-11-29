@@ -7,7 +7,7 @@ import java.lang.Math;
 
 public class YellowBird extends Bird {
 
-    private static final float SPEED_MULTIPLIER = 1.03f; // Higher speed multiplier for YellowBird
+    private static final float SPEED_MULTIPLIER = 1.03f;
 
     public YellowBird(int x, int y, int height, int width, Ground ground, boolean flipped) {
         super(x, y, height, width, ground, flipped);
