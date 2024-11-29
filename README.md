@@ -32,6 +32,12 @@ The main menu allows the player to start the game or access settings. This is ma
 ### Background Music
 Background music is loaded and played in a loop to enhance the gaming experience, using the Music class from LibGDX.
 
+### Assumptions
+1. To activate Black bird, You have to press SPACE Bar.
+2. Metal Obstacle doesn't crumble, it falls
+3. Saved Game slots are Occupied.
+4. Score of a game isn't required as level pass/fail only depends on if the pigs are dead or not.
+
 ## Instructions to run the code
 Java Development Kit (JDK) 8 or higher
 Gradle
